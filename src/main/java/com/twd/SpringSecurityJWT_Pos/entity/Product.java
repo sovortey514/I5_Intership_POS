@@ -1,4 +1,4 @@
-package com.twd.SpringSecurityJWT.entity;
+package com.twd.SpringSecurityJWT_Pos.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

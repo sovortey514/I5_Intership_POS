@@ -1,6 +1,5 @@
-package com.twd.SpringSecurityJWT.config;
+package com.twd.SpringSecurityJWT_Pos.config;
 
-import com.twd.SpringSecurityJWT.service.OurUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.twd.SpringSecurityJWT_Pos.service.OurUserDetailsService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
     private OurUserDetailsService ourUserDetailsService;
+
     @Autowired
     private JWTAuthFIlter jwtAuthFIlter;
 
@@ -31,15 +33,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**").permitAll()
+                .authorizeHttpRequests(request -> request
+                        // Permit access to Swagger UI and OpenAPI docs
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
+                        .permitAll()
+                        // Allow unauthenticated access to authentication and public endpoints
+                        .requestMatchers("/auth/**", "/public/**").permitAll()
+                        // Secure /admin and /user endpoints
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFIlter, UsernamePasswordAuthenticationFilter.class
-                );
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFIlter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 

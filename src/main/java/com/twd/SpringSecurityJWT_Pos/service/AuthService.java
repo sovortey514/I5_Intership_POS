@@ -1,13 +1,14 @@
-package com.twd.SpringSecurityJWT.service;
+package com.twd.SpringSecurityJWT_Pos.service;
 
-import com.twd.SpringSecurityJWT.dto.ReqRes;
-import com.twd.SpringSecurityJWT.entity.OurUsers;
-import com.twd.SpringSecurityJWT.repository.OurUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.twd.SpringSecurityJWT_Pos.dto.ReqRes;
+import com.twd.SpringSecurityJWT_Pos.entity.User;
+import com.twd.SpringSecurityJWT_Pos.repository.UserRepo;
 
 import java.util.HashMap;
 
@@ -15,7 +16,7 @@ import java.util.HashMap;
 public class AuthService {
 
     @Autowired
-    private OurUserRepo ourUserRepo;
+    private UserRepo ourUserRepo;
     @Autowired
     private JWTUtils jwtUtils;
     @Autowired
@@ -26,11 +27,11 @@ public class AuthService {
     public ReqRes signUp(ReqRes registrationRequest){
         ReqRes resp = new ReqRes();
         try {
-            OurUsers ourUsers = new OurUsers();
+            User ourUsers = new User();
             ourUsers.setEmail(registrationRequest.getEmail());
             ourUsers.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
             ourUsers.setRole(registrationRequest.getRole());
-            OurUsers ourUserResult = ourUserRepo.save(ourUsers);
+            User ourUserResult = ourUserRepo.save(ourUsers);
             if (ourUserResult != null && ourUserResult.getId()>0) {
                 resp.setOurUsers(ourUserResult);
                 resp.setMessage("User Saved Successfully");
@@ -67,7 +68,7 @@ public class AuthService {
     public ReqRes refreshToken(ReqRes refreshTokenReqiest){
         ReqRes response = new ReqRes();
         String ourEmail = jwtUtils.extractUsername(refreshTokenReqiest.getToken());
-        OurUsers users = ourUserRepo.findByEmail(ourEmail).orElseThrow();
+        User users = ourUserRepo.findByEmail(ourEmail).orElseThrow();
         if (jwtUtils.isTokenValid(refreshTokenReqiest.getToken(), users)) {
             var jwt = jwtUtils.generateToken(users);
             response.setStatusCode(200);

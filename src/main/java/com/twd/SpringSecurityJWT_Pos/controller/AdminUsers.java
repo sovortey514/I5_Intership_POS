@@ -1,8 +1,5 @@
-package com.twd.SpringSecurityJWT.controller;
+package com.twd.SpringSecurityJWT_Pos.controller;
 
-import com.twd.SpringSecurityJWT.dto.ReqRes;
-import com.twd.SpringSecurityJWT.entity.Product;
-import com.twd.SpringSecurityJWT.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,6 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.twd.SpringSecurityJWT_Pos.dto.ReqRes;
+import com.twd.SpringSecurityJWT_Pos.entity.Product;
+import com.twd.SpringSecurityJWT_Pos.repository.ProductRepo;
 
 @RestController
 public class AdminUsers {

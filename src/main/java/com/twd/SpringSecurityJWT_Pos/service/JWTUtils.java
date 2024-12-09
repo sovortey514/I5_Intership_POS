@@ -1,4 +1,4 @@
-package com.twd.SpringSecurityJWT.service;
+package com.twd.SpringSecurityJWT_Pos.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

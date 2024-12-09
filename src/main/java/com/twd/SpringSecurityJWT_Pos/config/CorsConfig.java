@@ -1,4 +1,4 @@
-package com.twd.SpringSecurityJWT.config;
+package com.twd.SpringSecurityJWT_Pos.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

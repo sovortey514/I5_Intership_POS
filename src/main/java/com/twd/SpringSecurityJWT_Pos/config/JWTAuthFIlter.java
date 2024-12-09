@@ -1,7 +1,5 @@
-package com.twd.SpringSecurityJWT.config;
+package com.twd.SpringSecurityJWT_Pos.config;
 
-import com.twd.SpringSecurityJWT.service.JWTUtils;
-import com.twd.SpringSecurityJWT.service.OurUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.twd.SpringSecurityJWT_Pos.service.JWTUtils;
+import com.twd.SpringSecurityJWT_Pos.service.OurUserDetailsService;
 
 import java.io.IOException;
 

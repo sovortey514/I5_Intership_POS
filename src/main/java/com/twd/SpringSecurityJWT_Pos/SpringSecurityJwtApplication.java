@@ -1,4 +1,4 @@
-package com.twd.SpringSecurityJWT;
+package com.twd.SpringSecurityJWT_Pos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

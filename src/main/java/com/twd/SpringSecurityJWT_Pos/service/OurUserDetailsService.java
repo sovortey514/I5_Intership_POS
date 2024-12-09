@@ -1,17 +1,18 @@
-package com.twd.SpringSecurityJWT.service;
+package com.twd.SpringSecurityJWT_Pos.service;
 
-import com.twd.SpringSecurityJWT.repository.OurUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.twd.SpringSecurityJWT_Pos.repository.UserRepo;
+
 @Service
 public class OurUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private OurUserRepo ourUserRepo;
+    private UserRepo ourUserRepo;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return ourUserRepo.findByEmail(username).orElseThrow();
