@@ -6,7 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.twd.SpringSecurityJWT_Pos.dto.ReqRes;
+import com.twd.SpringSecurityJWT_Pos.dto.resquest.ReqRes;
 import com.twd.SpringSecurityJWT_Pos.entity.User;
 import com.twd.SpringSecurityJWT_Pos.repository.UserRepo;
 

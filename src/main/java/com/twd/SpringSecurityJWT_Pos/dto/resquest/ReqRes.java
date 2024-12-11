@@ -1,10 +1,10 @@
-package com.twd.SpringSecurityJWT_Pos.dto;
+package com.twd.SpringSecurityJWT_Pos.dto.resquest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.twd.SpringSecurityJWT_Pos.entity.User;
-import com.twd.SpringSecurityJWT_Pos.entity.Product;
+// import com.twd.SpringSecurityJWT_Pos.entity.Product;
 
 import lombok.Data;
 
@@ -25,6 +25,12 @@ public class ReqRes {
     private String email;
     private String role;
     private String password;
-    private List<Product> products;
+    // private List<Product> products;
     private User ourUsers;
+
+    public void validateRole(){
+        if (!List.of("ADMIN", "STAFF", "MANAGER").contains(role)) {
+            throw new IllegalArgumentException("Invalid role provided");
+        }
+    }
 }

@@ -35,13 +35,16 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         // Permit access to Swagger UI and OpenAPI docs
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v2/api-pos/**", "/swagger-resources/**", "/webjars/**")
                         .permitAll()
+                        // Allow unauthenticated access to authentication and public endpoints
+                        .requestMatchers("/auth/signin","/auth/refresh").permitAll()
+                        .requestMatchers("/auth/signup").hasAnyAuthority("ADMIN")
                         // Allow unauthenticated access to authentication and public endpoints
                         .requestMatchers("/auth/**", "/public/**").permitAll()
                         // Secure /admin and /user endpoints
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAnyAuthority("USER")
+                        .requestMatchers("/staff/**").hasAnyAuthority("STAFF")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
