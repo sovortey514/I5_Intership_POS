@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.twd.SpringSecurityJWT_Pos.entity.User;
 // import com.twd.SpringSecurityJWT_Pos.entity.Product;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.util.List;
@@ -32,5 +34,11 @@ public class ReqRes {
         if (!List.of("ADMIN", "STAFF", "MANAGER").contains(role)) {
             throw new IllegalArgumentException("Invalid role provided");
         }
+    }
+
+    @NotNull
+    @Pattern(regexp = "^(ADMIN|STAFF)$", message = "Role must be either ADMIN or STAFF")
+    public String getRole() {
+        return role;
     }
 }

@@ -2,8 +2,10 @@ package com.twd.SpringSecurityJWT_Pos.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,11 +25,30 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    @Operation( summary = "Signup Up a new user", description = "Register a new user in the system")
-    @Parameter(name = "Authorization", description = "Bearer token", required = true, in = ParameterIn.HEADER)
-    public ResponseEntity<ReqRes> signUp(@RequestBody ReqRes signUpRequest){
-        return ResponseEntity.ok(authService.signUp(signUpRequest));
+@Operation(summary = "Signup a new user", description = "Register a new user in the system")
+public ResponseEntity<ReqRes> signUp(@RequestBody ReqRes signUpRequest) {
+    try {
+        // Call the service layer to handle signup
+        ReqRes response = authService.signUp(signUpRequest);
+
+        // Return appropriate response based on the service result
+        if (response.getStatusCode() == 200) {
+            return ResponseEntity.ok(response);
+        } else if (response.getStatusCode() == 400) {
+            return ResponseEntity.badRequest().body(response);
+        } else {
+            return ResponseEntity.status(500).body(response);
+        }
+    } catch (Exception e) {
+        // Handle unexpected exceptions
+        ReqRes errorResponse = new ReqRes();
+        errorResponse.setStatusCode(500);
+        errorResponse.setError("Unexpected error occurred: " + e.getMessage());
+        return ResponseEntity.status(500).body(errorResponse);
     }
+}
+
+
     @PostMapping("/signin")
     public ResponseEntity<ReqRes> signIn(@RequestBody ReqRes signInRequest){
         signInRequest.validateRole();

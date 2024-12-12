@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .permitAll()
                         // Allow unauthenticated access to authentication and public endpoints
                         .requestMatchers("/auth/signin","/auth/refresh").permitAll()
-                        .requestMatchers("/auth/signup").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/auth/signup").permitAll()
                         // Allow unauthenticated access to authentication and public endpoints
                         .requestMatchers("/auth/**", "/public/**").permitAll()
                         // Secure /admin and /user endpoints
