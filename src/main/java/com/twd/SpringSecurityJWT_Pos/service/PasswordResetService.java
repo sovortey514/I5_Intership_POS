@@ -51,11 +51,16 @@ public class PasswordResetService {
         String resetLink = RESET_PASSWORD_URL + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
+        try {
+            message.setTo(email);
         message.setSubject("Password Reset Request");
         message.setText("To reset your password, click the following link: " + resetLink);
 
         mailSender.send(message);
+        System.out.println("sucessfully");
+        } catch (Exception e) {
+            System.out.println("erro");
+        }
     }
 
     public boolean validateToken(String token) {
