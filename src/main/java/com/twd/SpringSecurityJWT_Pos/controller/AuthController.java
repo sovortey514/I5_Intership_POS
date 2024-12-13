@@ -25,37 +25,37 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-@Operation(summary = "Signup a new user", description = "Register a new user in the system")
-public ResponseEntity<ReqRes> signUp(@RequestBody ReqRes signUpRequest) {
-    try {
-        // Call the service layer to handle signup
-        ReqRes response = authService.signUp(signUpRequest);
+    @Operation(summary = "Signup a new user", description = "Register a new user in the system")
+    public ResponseEntity<ReqRes> signUp(@RequestBody ReqRes signUpRequest) {
+        try {
+            // Call the service layer to handle signup
+            ReqRes response = authService.signUp(signUpRequest);
 
-        // Return appropriate response based on the service result
-        if (response.getStatusCode() == 200) {
-            return ResponseEntity.ok(response);
-        } else if (response.getStatusCode() == 400) {
-            return ResponseEntity.badRequest().body(response);
-        } else {
-            return ResponseEntity.status(500).body(response);
+            // Return appropriate response based on the service result
+            if (response.getStatusCode() == 200) {
+                return ResponseEntity.ok(response);
+            } else if (response.getStatusCode() == 400) {
+                return ResponseEntity.badRequest().body(response);
+            } else {
+                return ResponseEntity.status(500).body(response);
+            }
+        } catch (Exception e) {
+            // Handle unexpected exceptions
+            ReqRes errorResponse = new ReqRes();
+            errorResponse.setStatusCode(500);
+            errorResponse.setError("Unexpected error occurred: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorResponse);
         }
-    } catch (Exception e) {
-        // Handle unexpected exceptions
-        ReqRes errorResponse = new ReqRes();
-        errorResponse.setStatusCode(500);
-        errorResponse.setError("Unexpected error occurred: " + e.getMessage());
-        return ResponseEntity.status(500).body(errorResponse);
     }
-}
-
 
     @PostMapping("/signin")
-    public ResponseEntity<ReqRes> signIn(@RequestBody ReqRes signInRequest){
+    public ResponseEntity<ReqRes> signIn(@RequestBody ReqRes signInRequest) {
         signInRequest.validateRole();
         return ResponseEntity.ok(authService.signIn(signInRequest));
     }
+
     @PostMapping("/refresh")
-    public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes refreshTokenRequest){
+    public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes refreshTokenRequest) {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 }

@@ -59,12 +59,6 @@ public class AuthService {
         return resp;
     }
     
-    
-    
-    
-    
-
-
     public ReqRes signIn(ReqRes signinRequest){
         ReqRes response = new ReqRes();
 
