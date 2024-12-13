@@ -32,6 +32,8 @@ public class PasswordResetService {
     @Autowired
     private UserRepo userRepository;
 
+    
+
     private static final String RESET_PASSWORD_URL = "http://localhost:9090/reset-password?token=";
 
     public void sendResetPasswordEmail(String email) {
@@ -59,7 +61,7 @@ public class PasswordResetService {
         mailSender.send(message);
         System.out.println("sucessfully");
         } catch (Exception e) {
-            System.out.println("erro");
+            System.out.println(e);
         }
     }
 
