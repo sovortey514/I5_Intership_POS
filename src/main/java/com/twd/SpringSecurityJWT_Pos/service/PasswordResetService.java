@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.twd.SpringSecurityJWT_Pos.entity.PasswordResetRequest;
+import com.twd.SpringSecurityJWT_Pos.entity.Mail;
 import com.twd.SpringSecurityJWT_Pos.repository.PasswordResetRequestRepository;
 import com.twd.SpringSecurityJWT_Pos.repository.UserRepo;
 
@@ -43,7 +43,7 @@ public class PasswordResetService {
         String token = UUID.randomUUID().toString();
 
         // Save the token and email in the database
-        PasswordResetRequest request = new PasswordResetRequest();
+        Mail request = new Mail();
         request.setEmail(user.getUsername());
         request.setToken(token);
         request.setCreatedAt(LocalDateTime.now());
@@ -66,7 +66,7 @@ public class PasswordResetService {
     }
 
     public boolean validateToken(String token) {
-        PasswordResetRequest request = passwordResetRequestRepository.findByToken(token)
+        Mail request = passwordResetRequestRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
     
         // Check if the token is expired (e.g., after 1 hour)
@@ -77,7 +77,7 @@ public class PasswordResetService {
     }
     
     public void resetPassword(String token, String newPassword) {
-        PasswordResetRequest request = passwordResetRequestRepository.findByToken(token)
+        Mail request = passwordResetRequestRepository.findByToken(token)
                 .orElseThrow(() -> new InvalidTokenException("Invalid token"));
     
         User user = userRepository.findByEmail(request.getEmail())

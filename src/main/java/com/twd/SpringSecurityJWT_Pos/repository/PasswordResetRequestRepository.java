@@ -5,13 +5,13 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.twd.SpringSecurityJWT_Pos.entity.PasswordResetRequest;
+import com.twd.SpringSecurityJWT_Pos.entity.Mail;
 
 @Repository
-public interface PasswordResetRequestRepository extends JpaRepository<PasswordResetRequest, Long> {
+public interface PasswordResetRequestRepository extends JpaRepository<Mail, Long> {
 
-    Optional<PasswordResetRequest> findByToken(String token);
+    Optional<Mail> findByToken(String token);
 
-    Optional<PasswordResetRequest> findByEmail(String email);
+    Optional<Mail> findByEmail(String email);
     
 }

@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class PasswordResetRequest {
+public class Mail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
