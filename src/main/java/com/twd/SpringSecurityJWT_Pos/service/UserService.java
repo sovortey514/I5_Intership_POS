@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.twd.SpringSecurityJWT_Pos.repository.UserRepo;
 
 @Service
-public class OurUserDetailsService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo ourUserRepo;

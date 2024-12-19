@@ -1,21 +1,29 @@
 package com.twd.SpringSecurityJWT_Pos.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.twd.SpringSecurityJWT_Pos.dto.resquest.RegisterRequest;
 import com.twd.SpringSecurityJWT_Pos.dto.resquest.ReqRes;
+import com.twd.SpringSecurityJWT_Pos.entity.User;
 import com.twd.SpringSecurityJWT_Pos.service.AuthService;
-
+import java.util.List;
+import java.util.Optional;
 // import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+// import io.swagger.v3.oas.annotations.Parameter;
+// import io.swagger.v3.oas.annotations.enums.ParameterIn;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,5 +65,32 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes refreshTokenRequest) {
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = authService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ReqRes> deleteUser(@PathVariable Long userId) {
+        ReqRes response = authService.deleteUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+    }
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<ReqRes> updateUser(@PathVariable Long userId, @RequestBody RegisterRequest updateRequest) {
+        ReqRes response = authService.updateUser(userId, updateRequest);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+        User user = authService.getUserById(userId);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

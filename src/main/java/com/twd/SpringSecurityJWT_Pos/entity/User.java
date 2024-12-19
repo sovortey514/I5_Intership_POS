@@ -18,6 +18,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    private String username;
     private String email;
     private String password;
     private String role;
@@ -26,11 +27,16 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role));
     }
 
+    // @Override
+    // public String getUsername() {
+    //     return email;
+    // }
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
+
 
     public String getName() {
         return name;
