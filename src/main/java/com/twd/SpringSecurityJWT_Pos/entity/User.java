@@ -22,6 +22,12 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
+
+    @Lob
+    @Column(name = "profile_image")
+    private byte[] profileImage;
+
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
