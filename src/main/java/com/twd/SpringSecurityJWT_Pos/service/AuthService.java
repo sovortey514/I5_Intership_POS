@@ -61,7 +61,7 @@ public class AuthService {
             User newUser = new User();
             newUser.setEmail(registrationRequest.getEmail());
             newUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-            newUser.setRole(registrationRequest.getRole().toUpperCase());
+            newUser.setRole("ADMIN");
             User savedUser = ourUserRepo.save(newUser);
     
             // Construct the response
@@ -79,6 +79,8 @@ public class AuthService {
         }
         return resp;
     }
+
+    
 
     //Password Validation
     public boolean isValidPassword(String password) {
