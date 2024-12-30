@@ -31,24 +31,24 @@ public class AuthService {
     public ReqRes signUp(ReqRes registrationRequest) {
         ReqRes resp = new ReqRes();
         try {
-            
-            //Validate email
+            // Validate email
             String email = registrationRequest.getEmail();
             if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
                 resp.setStatusCode(400);
                 resp.setMessage("Invalid email format");
                 return resp;
             }
-
+    
             // Validate password
             String password = registrationRequest.getPassword();
-            if(password == null || !isValidPassword(password)) {
+            if (password == null || !isValidPassword(password)) {
                 resp.setStatusCode(400);
                 resp.setMessage("Password must be at least 8 characters long, " +
-                            "contain one uppercase letter, one lowercase letter, " +
-                            "one digit, and one special character");
+                                "contain one uppercase letter, one lowercase letter, " +
+                                "one digit, and one special character");
                 return resp;
             }
+    
             // Check if the email already exists
             Optional<User> existingUser = ourUserRepo.findByEmail(registrationRequest.getEmail());
             if (existingUser.isPresent()) {
@@ -57,11 +57,21 @@ public class AuthService {
                 return resp;
             }
     
+            // Determine the role
+            String role = registrationRequest.getRole();
+            if (role == null || role.isEmpty()) {
+                role = "ADMIN"; // Default role
+            } else if (!role.equalsIgnoreCase("ADMIN") && !role.equalsIgnoreCase("STAFF")) {
+                resp.setStatusCode(400);
+                resp.setMessage("Invalid role. Role must be 'ADMIN' or 'STAFF'");
+                return resp;
+            }
+    
             // Save the user to the database
             User newUser = new User();
             newUser.setEmail(registrationRequest.getEmail());
             newUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-            newUser.setRole("ADMIN");
+            newUser.setRole(role.toUpperCase()); // Ensure role is stored in uppercase
             User savedUser = ourUserRepo.save(newUser);
     
             // Construct the response
@@ -79,6 +89,7 @@ public class AuthService {
         }
         return resp;
     }
+    
 
     
 
