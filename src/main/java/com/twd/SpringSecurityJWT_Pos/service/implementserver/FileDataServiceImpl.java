@@ -30,7 +30,8 @@ public class FileDataServiceImpl implements FileDataService {
     @Autowired
     private UserRepo userRepo;
 
-    private final String FILE_PATH = "D:\\Year5\\I5_intership\\POS\\pos_system\\src\\main\\java\\com\\twd\\Image";
+    // private final String FILE_PATH = "D:\\Year5\\I5_intership\\POS\\pos_system\\src\\main\\java\\com\\twd\\Image";
+    private final String FILE_PATH = "D:\\Year5\\I5_intership\\POS\\pos_system\\src\\Uploads\\";
 
     @Override
     public String uploadFileToUserDirectory(MultipartFile file, Long userId) throws IOException {
@@ -129,7 +130,7 @@ public class FileDataServiceImpl implements FileDataService {
         responseDTO.setEmail(user.getEmail());
         responseDTO.setName(user.getName());
         responseDTO.setPassword(user.getPassword());
-        responseDTO.setRole(user.getRole());
+        responseDTO.setRole(user.getrole());
         responseDTO.setUsername(user.getUsername());
         responseDTO.setFiles(fileDataDTOs);
 
@@ -153,7 +154,7 @@ public class FileDataServiceImpl implements FileDataService {
                     fileDataDTO.setFileType(fileData.getType());
 
                     // Construct file URL
-                    String fileUrl = "http://localhost:6060/admin/get_image/" + fileData.getName();
+                    String fileUrl = "http://localhost:9090/admin/get_image/" + fileData.getName();
                     fileDataDTO.setFileUrl(fileUrl);
 
                     fileDataDTOs.add(fileDataDTO);
@@ -168,7 +169,7 @@ public class FileDataServiceImpl implements FileDataService {
             responseDTO.setEmail(user.getEmail());
             responseDTO.setName(user.getName());
             responseDTO.setPassword(user.getPassword());
-            responseDTO.setRole(user.getRole());
+            responseDTO.setRole(user.getrole());
             responseDTO.setUsername(user.getUsername());
             responseDTO.setFiles(fileDataDTOs);
 

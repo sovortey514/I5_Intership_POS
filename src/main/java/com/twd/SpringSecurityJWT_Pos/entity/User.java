@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -23,11 +24,15 @@ public class User implements UserDetails {
     private String password;
     private String role;
 
+    
+
     @Lob
     @Column(name = "profile_image")
     private byte[] profileImage;
 
-    
+    @OneToMany(mappedBy = "user")
+    private Set<FileData> files; 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
@@ -46,6 +51,10 @@ public class User implements UserDetails {
 
     public String getName() {
         return name;
+    }
+    
+    public String getrole() {
+        return role;
     }
 
     @Override

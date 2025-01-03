@@ -35,6 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
+
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         // Permit access to Swagger UI and OpenAPI docs
@@ -46,8 +47,9 @@ public class SecurityConfig {
                         // Allow unauthenticated access to authentication and public endpoints
                         .requestMatchers("/auth/**", "/public/**").permitAll()
                         // Secure /admin and /user endpoints
-                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/staff/**").hasAnyAuthority("STAFF")
+                        .requestMatchers("/admin/get_image/**").permitAll()
                         .requestMatchers("/adminstaff/**").hasAnyAuthority("ADMIN", "STAFF")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

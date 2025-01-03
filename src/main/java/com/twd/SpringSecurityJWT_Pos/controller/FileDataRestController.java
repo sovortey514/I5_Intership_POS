@@ -6,22 +6,27 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.twd.SpringSecurityJWT_Pos.dto.respones.UserDTO;
+import com.twd.SpringSecurityJWT_Pos.dto.resquest.UploadImageRequest;
 import com.twd.SpringSecurityJWT_Pos.service.FileDataService;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import org.springframework.http.MediaType;
 
-
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class FileDataRestController {
 
     @Autowired
@@ -30,18 +35,16 @@ public class FileDataRestController {
     @PostMapping("/upload_image")
     public ResponseEntity<?> uploadImageToFileDirectory(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("userId") Long fixedAssetId) throws IOException {
-
-        // Call the service method with both file and fixedAssetId
-        String uploadFile = fileDataService.uploadFileToUserDirectory(file, fixedAssetId);
+            @RequestParam("userId") Long userId) throws IOException {
+        String uploadFile = fileDataService.uploadFileToUserDirectory(file, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(uploadFile);
     }
 
     @GetMapping("/get_images_by_user/{userId}")
-    public ResponseEntity<?> downloadAllImagesByFixedAssetId(@PathVariable Long fixedAssetId) {
+    public ResponseEntity<?> downloadAllImagesByFixedAssetId(@PathVariable Long userId) {
         try {
-            UserDTO files = fileDataService.downloadAllFilesByUserId(fixedAssetId);
+            UserDTO files = fileDataService.downloadAllFilesByUserId(userId);
             return ResponseEntity.status(HttpStatus.OK).body(files);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -8,9 +8,8 @@ import com.twd.SpringSecurityJWT_Pos.dto.respones.UserDTO;
 
 import java.io.IOException;
 import java.util.List;
-public interface FileDataService {
 
-    // String uploadFileToFileDirectory(MultipartFile file, Long fixedAssetId) throws IOException;
+public interface FileDataService {
 
     String uploadFileToUserDirectory(MultipartFile file, Long userId) throws IOException;
 
