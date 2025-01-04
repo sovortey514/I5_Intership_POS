@@ -9,7 +9,8 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
+        registry.addMapping("/auth/get_image/**")
+                .allowedMethods("/auth/users/**")
                 .allowedOrigins("*") // Allow all origins; specify your frontend URL for better security
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")

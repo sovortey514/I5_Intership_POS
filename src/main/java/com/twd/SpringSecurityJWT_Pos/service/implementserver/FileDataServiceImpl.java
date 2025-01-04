@@ -115,7 +115,7 @@ public class FileDataServiceImpl implements FileDataService {
                 fileDataDTO.setFileType(fileData.getType());
 
                 // Construct file URL
-                String fileUrl = "http://localhost:6060/admin/get_image/" + fileData.getName();
+                String fileUrl = "http://localhost:6060/auth/get_image/" + fileData.getName();
                 fileDataDTO.setFileUrl(fileUrl);
 
                 fileDataDTOs.add(fileDataDTO);
@@ -154,7 +154,7 @@ public class FileDataServiceImpl implements FileDataService {
                     fileDataDTO.setFileType(fileData.getType());
 
                     // Construct file URL
-                    String fileUrl = "http://localhost:9090/admin/get_image/" + fileData.getName();
+                    String fileUrl = "http://localhost:9090/auth/get_image/" + fileData.getName();
                     fileDataDTO.setFileUrl(fileUrl);
 
                     fileDataDTOs.add(fileDataDTO);
