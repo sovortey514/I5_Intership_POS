@@ -31,7 +31,7 @@ public class ReqRes {
     private User ourUsers;
 
     public void validateRole(){
-        if (!List.of("ADMIN", "STAFF", "MANAGER").contains(role)) {
+        if (!List.of("ADMIN", "STAFF").contains(role)) {
             throw new IllegalArgumentException("Invalid role provided");
         }
     }

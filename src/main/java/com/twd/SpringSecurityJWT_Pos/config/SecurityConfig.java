@@ -3,6 +3,7 @@ package com.twd.SpringSecurityJWT_Pos.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+// import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,18 +39,14 @@ public class SecurityConfig {
 
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        // Permit access to Swagger UI and OpenAPI docs
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v2/api-pos/**", "/swagger-resources/**", "/webjars/**")
-                        .permitAll()
-                        // Allow unauthenticated access to authentication and public endpoints
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v2/api-pos/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/auth/signin","/auth/refresh").permitAll()
                         .requestMatchers("/auth/signup").permitAll()
-                        // Allow unauthenticated access to authentication and public endpoints
+                        // .requestMatchers("/auth/users/**").permitAll()
                         .requestMatchers("/auth/**", "/public/**").permitAll()
-                        // Secure /admin and /user endpoints
                         .requestMatchers("/admin/**").permitAll()
+                        // .requestMatchers("/auth/users/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/staff/**").hasAnyAuthority("STAFF")
-                        .requestMatchers("/admin/get_image/**").permitAll()
                         .requestMatchers("/adminstaff/**").hasAnyAuthority("ADMIN", "STAFF")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

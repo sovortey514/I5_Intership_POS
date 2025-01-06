@@ -198,7 +198,7 @@ public class AuthService {
     public User getUserById(Long userId) {
         return ourUserRepo.findById(userId).orElse(null);
     }
-
+    
     @Transactional
     public ReqRes deleteUser(Long userId) {
         ReqRes response = new ReqRes();

@@ -78,6 +78,7 @@ public class AuthController {
         ReqRes response = authService.deleteUser(userId);
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
     }
+    
     @PutMapping("/users/{userId}")
     public ResponseEntity<ReqRes> updateUser(@PathVariable Long userId, @RequestBody RegisterRequest updateRequest) {
         ReqRes response = authService.updateUser(userId, updateRequest);
