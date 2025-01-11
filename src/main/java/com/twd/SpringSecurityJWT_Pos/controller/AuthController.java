@@ -94,4 +94,20 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/users/{userId}/disable")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ReqRes> disableUser(@PathVariable Long userId) {
+        ReqRes response = authService.disableUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+    }
+
+    @PutMapping("/users/{userId}/enable")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<ReqRes> enableUser(@PathVariable Long userId) {
+        ReqRes response = authService.enableUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+    }
+    
 }
+

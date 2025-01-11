@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String role;
-
+    private boolean enabled;
     
 
     @Lob
@@ -38,14 +38,23 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role));
     }
 
-    // @Override
-    // public String getUsername() {
-    //     return email;
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    // public boolean isEnabled() {
+    //     return enabled;
     // }
 
     @Override
-    public String getUsername() {
-        return username;
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 
@@ -69,11 +78,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
         return true;
     }
 }
