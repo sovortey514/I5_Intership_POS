@@ -139,9 +139,9 @@ public class AuthService {
             User user = ourUserRepo.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            if (updateRequest.getName() != null) {
-                user.setName(updateRequest.getName());
-            }
+            // if (updateRequest.getName() != null) {
+            //     user.setName(updateRequest.getName());
+            // }
             if (updateRequest.getUsername() != null) {
                 user.setName(updateRequest.getUsername());
             }
