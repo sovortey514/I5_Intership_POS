@@ -60,8 +60,8 @@ public class FixedAsset {
     @Column(columnDefinition = "TEXT")
     private String remarks;
 
-    @Column(nullable = true)
-    private String status= "1";
+    // @Column(nullable = true)
+    // private String status= "1";
 
     @Column(nullable = false)
     private String statustext;
@@ -70,17 +70,13 @@ public class FixedAsset {
     @JoinColumn(name = "user_id")
     private OurUsers user;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "building_id")
-    private Building building;
-
     @OneToOne(mappedBy = "fixedAsset")
     @JsonIgnore
     private FileData fileData;
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
-    @JoinColumn(name = "asset_holder_id", insertable = true, updatable = true)
-    private AssetHolder assetHolder;
+    // @ManyToOne(cascade= CascadeType.PERSIST)
+    // @JoinColumn(name = "asset_holder_id", insertable = true, updatable = true)
+    // private AssetHolder assetHolder;
 
     @Lob
     @Column(name = "image")

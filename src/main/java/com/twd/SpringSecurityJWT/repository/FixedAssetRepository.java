@@ -14,16 +14,14 @@ public interface FixedAssetRepository extends JpaRepository<FixedAsset, Long> {
     
  
     @Query("SELECT DISTINCT fa FROM FixedAsset fa " +
-       "JOIN FETCH fa.category " +
-       "LEFT JOIN FETCH fa.assetHolder " +
-       "WHERE fa.status = '1'")
+           "JOIN FETCH fa.category")
     List<FixedAsset> findAllWithCategory();
 
-    @Query("SELECT fa FROM FixedAsset fa " +
-           "JOIN fa.assetHolder ah " +
-           "JOIN ah.department d " +
-           "WHERE d.id = :departmentId")
-    List<FixedAsset> findFixedAssetsByDepartmentId(@Param("departmentId") Long departmentId);
+    // @Query("SELECT fa FROM FixedAsset fa " +
+    //     //    "JOIN fa.assetHolder ah " +
+    //     //    "JOIN ah.department d " +
+    //        "WHERE d.id = :departmentId")
+    // List<FixedAsset> findFixedAssetsByDepartmentId(@Param("departmentId") Long departmentId);
     
     boolean existsBySerialNumber(String serialNumber);
     

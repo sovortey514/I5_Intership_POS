@@ -3,7 +3,7 @@ package com.twd.SpringSecurityJWT.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.twd.SpringSecurityJWT.entity.AssetHolder;
+// import com.twd.SpringSecurityJWT.entity.AssetHolder;
 
 import lombok.Data;
 

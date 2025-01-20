@@ -17,9 +17,9 @@ public class FixedAssetDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "asset_holder_id") 
-    private AssetHolder assetHolder;
+    // @ManyToOne(fetch = FetchType.EAGER)
+    // @JoinColumn(name = "asset_holder_id") 
+    // private AssetHolder assetHolder;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "asset_id")

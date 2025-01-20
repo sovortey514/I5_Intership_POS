@@ -46,10 +46,10 @@ public class ExcelExportService {
             row.createCell(8).setCellValue(asset.getUnit());
             row.createCell(9).setCellValue(asset.getQuantity());
             row.createCell(10).setCellValue(asset.getRemarks() != null ? asset.getRemarks() : "N/A");
-            row.createCell(11).setCellValue(asset.getStatus() != null ? asset.getStatus() : "N/A");
+            // row.createCell(11).setCellValue(asset.getStatus() != null ? asset.getStatus() : "N/A");
             row.createCell(12).setCellValue(asset.getStatustext());
             row.createCell(13).setCellValue(asset.getUser() != null ? asset.getUser().getName() : "N/A");
-            row.createCell(14).setCellValue(asset.getBuilding() != null ? asset.getBuilding().getName() : "N/A");
+            // row.createCell(14).setCellValue(asset.getBuilding() != null ? asset.getBuilding().getName() : "N/A");
             row.createCell(15).setCellValue(asset.getImage() != null ? "Image Data" : "No Image"); // Adjust as needed
         }
 

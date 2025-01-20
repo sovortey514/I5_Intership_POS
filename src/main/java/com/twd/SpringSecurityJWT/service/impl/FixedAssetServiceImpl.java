@@ -104,19 +104,19 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             existingAsset.setQuantity(fixedAsset.getQuantity());
             existingAsset.setImage(fixedAsset.getImage());
             existingAsset.setCategory(fixedAsset.getCategory());
-            existingAsset.setStatus(fixedAsset.getStatus());
+            // existingAsset.setStatus(fixedAsset.getStatus());
             existingAsset.setStatustext(fixedAsset.getStatustext());
-            existingAsset.setAssetHolder(fixedAsset.getAssetHolder());
+            // existingAsset.setAssetHolder(fixedAsset.getAssetHolder());
             // existingAsset.setStatustext(fixedAsset.getStatustext());
 
             return fixedAssetRepository.save(existingAsset);
         }).orElseThrow(() -> new RuntimeException("Fixed Asset not found"));
     }
 
-    @Override
-    public List<FixedAsset> getAllFixedAssetsWithDepartment(Long departmentId) {
-        return fixedAssetRepository.findFixedAssetsByDepartmentId(departmentId);
-    }
+    // @Override
+    // public List<FixedAsset> getAllFixedAssetsWithDepartment(Long departmentId) {
+    //     return fixedAssetRepository.findFixedAssetsByDepartmentId(departmentId);
+    // }
 
 
 

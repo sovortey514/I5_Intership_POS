@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.twd.SpringSecurityJWT.dto.ReqRes;
-import com.twd.SpringSecurityJWT.entity.AssetHolder;
+// import com.twd.SpringSecurityJWT.entity.AssetHolder;
 import com.twd.SpringSecurityJWT.entity.FixedAssetCounts;
 import com.twd.SpringSecurityJWT.service.FixedAssetCountService;
 

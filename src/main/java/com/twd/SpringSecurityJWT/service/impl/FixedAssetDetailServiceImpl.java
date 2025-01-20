@@ -6,11 +6,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.twd.SpringSecurityJWT.entity.AssetHolder;
+// import com.twd.SpringSecurityJWT.entity.AssetHolder;
 import com.twd.SpringSecurityJWT.entity.FixedAsset;
 import com.twd.SpringSecurityJWT.entity.FixedAssetCounts;
 import com.twd.SpringSecurityJWT.entity.FixedAssetDetail;
-import com.twd.SpringSecurityJWT.repository.AssetHolderRepository;
+// import com.twd.SpringSecurityJWT.repository.AssetHolderRepository;
 import com.twd.SpringSecurityJWT.repository.FixedAssetDetailRepository;
 import com.twd.SpringSecurityJWT.repository.FixedAssetRepository;
 import com.twd.SpringSecurityJWT.service.FixedAssetDetailService;
@@ -18,8 +18,8 @@ import com.twd.SpringSecurityJWT.service.FixedAssetDetailService;
 @Service
 public class FixedAssetDetailServiceImpl implements FixedAssetDetailService {
 
-    @Autowired
-    private AssetHolderRepository assetHolderRepository;
+    // @Autowired
+    // private AssetHolderRepository assetHolderRepository;
 
     @Autowired
     private FixedAssetRepository fixedAssetRepository;
@@ -36,9 +36,9 @@ public class FixedAssetDetailServiceImpl implements FixedAssetDetailService {
         //     throw new IllegalArgumentException("Invalid asset holder ID");
         // }
 
-        if(fixedAssetDetail.getAssetHolder() == null || !assetHolderRepository.existsById(fixedAssetDetail.getAssetHolder().getId())){
-            throw new IllegalArgumentException("Invalid asset holder ID");
-        }
+        // if(fixedAssetDetail.getAssetHolder() == null || !assetHolderRepository.existsById(fixedAssetDetail.getAssetHolder().getId())){
+        //     throw new IllegalArgumentException("Invalid asset holder ID");
+        // }
 
         if (fixedAssetDetail.getFixedAsset() == null || !fixedAssetRepository.existsById(fixedAssetDetail.getFixedAsset().getId())) {
             throw new IllegalArgumentException("Invalid fixed asset ID");
@@ -61,7 +61,7 @@ public class FixedAssetDetailServiceImpl implements FixedAssetDetailService {
         fixedAssetDetail.setExistenceAsset(fixedAssetDetail.getExistenceAsset());
         fixedAssetDetail.setRemarks(fixedAssetDetail.getRemarks());
         fixedAssetDetail.setQuantityCounted(fixedAssetDetail.getQuantityCounted());
-        fixedAssetDetail.setAssetHolder(fixedAssetDetail.getAssetHolder());
+        // fixedAssetDetail.setAssetHolder(fixedAssetDetail.getAssetHolder());
         fixedAssetDetail.setFixedAsset(fixedAssetDetail.getFixedAsset());
         
         System.out.println("Saving FixedAssetDetail: " + fixedAssetDetail);

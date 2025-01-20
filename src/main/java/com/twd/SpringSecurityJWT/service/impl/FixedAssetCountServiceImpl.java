@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.twd.SpringSecurityJWT.entity.AssetHolder;
+// import com.twd.SpringSecurityJWT.entity.AssetHolder;
 import com.twd.SpringSecurityJWT.entity.Category;
 import com.twd.SpringSecurityJWT.entity.Department;
 import com.twd.SpringSecurityJWT.entity.FixedAsset;
 import com.twd.SpringSecurityJWT.entity.FixedAssetCounts;
 import com.twd.SpringSecurityJWT.entity.FixedAssetDetail;
-import com.twd.SpringSecurityJWT.repository.AssetHolderRepository;
+// import com.twd.SpringSecurityJWT.repository.AssetHolderRepository;
 import com.twd.SpringSecurityJWT.repository.DepartmentRepository;
 import com.twd.SpringSecurityJWT.repository.FixedAssetCountsRepository;
 import com.twd.SpringSecurityJWT.repository.FixedAssetDetailRepository;
@@ -35,8 +35,8 @@ public class FixedAssetCountServiceImpl implements FixedAssetCountService {
     @Autowired
     private FixedAssetRepository fixedAssetRepository;
 
-    @Autowired
-    private AssetHolderRepository assetHolderRepository;
+    // @Autowired
+    // private AssetHolderRepository assetHolderRepository;
 
     @Override
     public FixedAssetCounts createFixedAssetCounts(FixedAssetCounts fixedAssetCounts) {

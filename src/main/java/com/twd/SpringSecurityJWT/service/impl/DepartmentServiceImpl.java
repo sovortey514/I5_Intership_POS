@@ -1,6 +1,5 @@
 package com.twd.SpringSecurityJWT.service.impl;
 
-import com.twd.SpringSecurityJWT.entity.Building;
 import com.twd.SpringSecurityJWT.entity.Department;
 import com.twd.SpringSecurityJWT.repository.DepartmentRepository;
 import com.twd.SpringSecurityJWT.service.DepartmentService;
@@ -30,7 +29,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         
         department.setName(department.getName());
-        department.setBuilding(department.getBuilding());
         department.setFloorNumber(department.getFloorNumber());
         department.setDescription(department.getDescription());
         department.setCreatedAt(LocalDateTime.now());
@@ -61,7 +59,6 @@ public class DepartmentServiceImpl implements DepartmentService {
             updatedDepartment.setName(department.getName());
             updatedDepartment.setDescription(department.getDescription());
             updatedDepartment.setFloorNumber(department.getFloorNumber());
-            updatedDepartment.setBuilding(department.getBuilding());
             updatedDepartment.setUpdatedAt(LocalDateTime.now());
             validateDepartment(updatedDepartment);
             return departmentRepository.save(updatedDepartment);

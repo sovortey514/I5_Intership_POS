@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.twd.SpringSecurityJWT.dto.FixedAssetRequest;
 import com.twd.SpringSecurityJWT.dto.ReqRes;
-import com.twd.SpringSecurityJWT.entity.AssetHolder;
+// import com.twd.SpringSecurityJWT.entity.AssetHolder;
 import com.twd.SpringSecurityJWT.entity.Category;
 import com.twd.SpringSecurityJWT.entity.FixedAsset;
-import com.twd.SpringSecurityJWT.repository.AssetHolderRepository;
+// import com.twd.SpringSecurityJWT.repository.AssetHolderRepository;
 import com.twd.SpringSecurityJWT.repository.CategoryRepository;
 import com.twd.SpringSecurityJWT.repository.FixedAssetRepository;
 import com.twd.SpringSecurityJWT.service.FixedAssetService;
@@ -35,8 +35,8 @@ public class FixedAssetController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
-    private AssetHolderRepository assetHolderRepository;
+    // @Autowired
+    // private AssetHolderRepository assetHolderRepository;
 
     @Autowired
     private FixedAssetRepository fixedAssetRepository;
@@ -56,7 +56,7 @@ public class FixedAssetController {
             fixedAssetToSave.setUnit(fixedAssetRequest.getUnit());
             fixedAssetToSave.setQuantity(fixedAssetRequest.getQuantity());
             fixedAssetToSave.setImage(fixedAssetRequest.getImage());
-            fixedAssetToSave.setStatus(fixedAssetRequest.getStatus());
+            // fixedAssetToSave.setStatus(fixedAssetRequest.getStatus());
             fixedAssetToSave.setStatustext(fixedAssetRequest.getStatustext() != null ? fixedAssetRequest.getStatustext() : "Avaliable");
 
             Integer categoryId = fixedAssetRequest.getCategoryId();
@@ -178,9 +178,9 @@ public class FixedAssetController {
             if (fixedAssetRequest.getImage() != null) {
                 existingFixedAsset.setImage(fixedAssetRequest.getImage());
             }
-            if (fixedAssetRequest.getStatus() != null) {
-                existingFixedAsset.setStatus(fixedAssetRequest.getStatus());
-            }
+            // if (fixedAssetRequest.getStatus() != null) {
+            //     existingFixedAsset.setStatus(fixedAssetRequest.getStatus());
+            // }
             if (fixedAssetRequest.getStatustext() != null) {
                 existingFixedAsset.setStatustext(fixedAssetRequest.getStatustext());
             }
@@ -197,17 +197,17 @@ public class FixedAssetController {
             }
 
             // Update the AssetHolder if present
-            Long assetHolderId = fixedAssetRequest.getAssetHolder();
-            if (assetHolderId != null) {
-                Optional<AssetHolder> assetHolderOpt = assetHolderRepository.findById(assetHolderId);
-                if (assetHolderOpt.isPresent()) {
-                    existingFixedAsset.setAssetHolder(assetHolderOpt.get());
-                } else {
-                    throw new RuntimeException("AssetHolder not found");
-                }
-            } else {
-                existingFixedAsset.setAssetHolder(null); // or handle as needed
-            }
+            // Long assetHolderId = fixedAssetRequest.getAssetHolder();
+            // if (assetHolderId != null) {
+            //     Optional<AssetHolder> assetHolderOpt = assetHolderRepository.findById(assetHolderId);
+            //     if (assetHolderOpt.isPresent()) {
+            //         existingFixedAsset.setAssetHolder(assetHolderOpt.get());
+            //     } else {
+            //         throw new RuntimeException("AssetHolder not found");
+            //     }
+            // } else {
+            //     existingFixedAsset.setAssetHolder(null); // or handle as needed
+            // }
 
             // Save the updated FixedAsset
             FixedAsset updatedFixedAsset = fixedAssetRepository.save(existingFixedAsset);
@@ -223,19 +223,19 @@ public class FixedAssetController {
         return ResponseEntity.ok(resp);
     }
 
-    @GetMapping("/getFixedAssetsByDepartment/{departmentId}")
-    public ResponseEntity<ReqRes> getFixedAssetsByDepartment(@PathVariable Long departmentId) {
-        ReqRes resp = new ReqRes();
-        try {
-            List<FixedAsset> fixedAssets = fixedAssetService.getAllFixedAssetsWithDepartment(departmentId);
-            resp.setFixedAssets(fixedAssets);
-            resp.setMessage("Fixed Assets Retrieved Successfully");
-            resp.setStatusCode(200);
-        } catch (Exception e) {
-            resp.setStatusCode(500);
-            resp.setError(e.getMessage());
-        }
-        return ResponseEntity.ok(resp);
-    }
+    // @GetMapping("/getFixedAssetsByDepartment/{departmentId}")
+    // public ResponseEntity<ReqRes> getFixedAssetsByDepartment(@PathVariable Long departmentId) {
+    //     ReqRes resp = new ReqRes();
+    //     try {
+    //         List<FixedAsset> fixedAssets = fixedAssetService.getAllFixedAssetsWithDepartment(departmentId);
+    //         resp.setFixedAssets(fixedAssets);
+    //         resp.setMessage("Fixed Assets Retrieved Successfully");
+    //         resp.setStatusCode(200);
+    //     } catch (Exception e) {
+    //         resp.setStatusCode(500);
+    //         resp.setError(e.getMessage());
+    //     }
+    //     return ResponseEntity.ok(resp);
+    // }
 
 }

@@ -179,13 +179,13 @@ public class FileDataServiceImpl implements FileDataService {
         responseDTO.setFixedAssetUnit(fixedAsset.getUnit());
         responseDTO.setFixedAssetQuantity(fixedAsset.getQuantity());
         responseDTO.setFixedAssetRemarks(fixedAsset.getRemarks());
-        responseDTO.setFixedAssetStatus(fixedAsset.getStatus());
+        // responseDTO.setFixedAssetStatus(fixedAsset.getStatus());
         responseDTO.setFixedAssetStatusText(fixedAsset.getStatustext());
         // responseDTO.setFixedAssetUser(fixedAsset.getUser() != null ?
         // fixedAsset.getUser().getName() : null);
-        responseDTO.setFixedAssetBuilding(fixedAsset.getBuilding() != null ? fixedAsset.getBuilding().getName() : null);
-        responseDTO.setFixedAssetAssetHolder(
-                fixedAsset.getAssetHolder() != null ? fixedAsset.getAssetHolder().getName() : null);
+
+        // responseDTO.setFixedAssetAssetHolder(
+                // fixedAsset.getAssetHolder() != null ? fixedAsset.getAssetHolder().getName() : null);
         responseDTO.setFiles(fileDataDTOs);
         return responseDTO;
     }
@@ -228,12 +228,12 @@ public class FileDataServiceImpl implements FileDataService {
             responseDTO.setFixedAssetUnit(fixedAsset.getUnit());
             responseDTO.setFixedAssetQuantity(fixedAsset.getQuantity());
             responseDTO.setFixedAssetRemarks(fixedAsset.getRemarks());
-            responseDTO.setFixedAssetStatus(fixedAsset.getStatus());
+            // responseDTO.setFixedAssetStatus(fixedAsset.getStatus());
             responseDTO.setFixedAssetStatusText(fixedAsset.getStatustext());
-            responseDTO.setFixedAssetBuilding(
-                    fixedAsset.getBuilding() != null ? fixedAsset.getBuilding().getName() : null);
-            responseDTO.setFixedAssetAssetHolder(
-                    fixedAsset.getAssetHolder() != null ? fixedAsset.getAssetHolder().getName() : null);
+            // responseDTO.setFixedAssetBuilding(
+            //         // fixedAsset.getBuilding() != null ? fixedAsset.getBuilding().getName() : null);
+            // responseDTO.setFixedAssetAssetHolder(
+                    // fixedAsset.getAssetHolder() != null ? fixedAsset.getAssetHolder().getName() : null);
             responseDTO.setFiles(fileDataDTOs);
 
             responseList.add(responseDTO);
