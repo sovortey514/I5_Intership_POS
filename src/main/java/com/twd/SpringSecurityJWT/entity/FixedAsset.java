@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +25,7 @@ import lombok.Data;
 @Entity
 @Table(name = "fixed_assets")
 public class FixedAsset {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,33 +37,15 @@ public class FixedAsset {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 100)
-    private String model;
-    
     @Column(nullable = false)
-    private Integer year;
-
-    @Column(nullable = false)
-    private Double price; 
-
-    @Column(length = 100, unique = true)
-    private String serialNumber;
+    private Double price;
 
     private LocalDate purchaseDate;
-
-    @Column(length = 50)
-    private String unit;
 
     private Integer quantity;
 
     @Column(columnDefinition = "TEXT")
     private String remarks;
-
-    // @Column(nullable = true)
-    // private String status= "1";
-
-    @Column(nullable = false)
-    private String statustext;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
@@ -73,10 +54,6 @@ public class FixedAsset {
     @OneToOne(mappedBy = "fixedAsset")
     @JsonIgnore
     private FileData fileData;
-
-    // @ManyToOne(cascade= CascadeType.PERSIST)
-    // @JoinColumn(name = "asset_holder_id", insertable = true, updatable = true)
-    // private AssetHolder assetHolder;
 
     @Lob
     @Column(name = "image")
@@ -95,14 +72,6 @@ public class FixedAsset {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
 }

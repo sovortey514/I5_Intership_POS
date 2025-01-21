@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+// import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,6 +23,6 @@ public interface FixedAssetRepository extends JpaRepository<FixedAsset, Long> {
     //        "WHERE d.id = :departmentId")
     // List<FixedAsset> findFixedAssetsByDepartmentId(@Param("departmentId") Long departmentId);
     
-    boolean existsBySerialNumber(String serialNumber);
+    // boolean existsBySerialNumber(String serialNumber);
     
 }

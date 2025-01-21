@@ -38,16 +38,16 @@ public class ExcelExportService {
             row.createCell(0).setCellValue(asset.getId());
             row.createCell(1).setCellValue(asset.getCategory() != null ? asset.getCategory().getName() : "N/A");
             row.createCell(2).setCellValue(asset.getName());
-            row.createCell(3).setCellValue(asset.getModel());
-            row.createCell(4).setCellValue(asset.getYear());
+            // row.createCell(3).setCellValue(asset.getModel());
+            // row.createCell(4).setCellValue(asset.getYear());
             row.createCell(5).setCellValue(asset.getPrice());
-            row.createCell(6).setCellValue(asset.getSerialNumber());
+            // row.createCell(6).setCellValue(asset.getSerialNumber());
             row.createCell(7).setCellValue(asset.getPurchaseDate() != null ? asset.getPurchaseDate().toString() : "N/A");
-            row.createCell(8).setCellValue(asset.getUnit());
+            // row.createCell(8).setCellValue(asset.getUnit());
             row.createCell(9).setCellValue(asset.getQuantity());
             row.createCell(10).setCellValue(asset.getRemarks() != null ? asset.getRemarks() : "N/A");
             // row.createCell(11).setCellValue(asset.getStatus() != null ? asset.getStatus() : "N/A");
-            row.createCell(12).setCellValue(asset.getStatustext());
+            // row.createCell(12).setCellValue(asset.getStatustext());
             row.createCell(13).setCellValue(asset.getUser() != null ? asset.getUser().getName() : "N/A");
             // row.createCell(14).setCellValue(asset.getBuilding() != null ? asset.getBuilding().getName() : "N/A");
             row.createCell(15).setCellValue(asset.getImage() != null ? "Image Data" : "No Image"); // Adjust as needed

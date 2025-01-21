@@ -32,7 +32,7 @@ public class FileData {
     private String filePath;
 
     @OneToOne
-    @JoinColumn(name = "fixed_asset_id")
+    @JoinColumn(name = "fixed_asset_id",  nullable = false)
     private FixedAsset fixedAsset;
 
     @ManyToOne

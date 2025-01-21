@@ -57,7 +57,7 @@ public class FileDataServiceImpl implements FileDataService {
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
                 .filePath(filePath)
-                .fixedAsset(fixedAsset) // Associate the file with the fixed asset
+                // .fixedAsset(fixedAsset) // Associate the file with the fixed asset
                 .build();
 
         // Save file data to the database
@@ -171,16 +171,16 @@ public class FileDataServiceImpl implements FileDataService {
         responseDTO.setFixedAssetId(fixedAsset.getId());
         responseDTO.setFixedAssetName(fixedAsset.getName());
         responseDTO.setFixedAssetCategory(fixedAsset.getCategory().getName());
-        responseDTO.setFixedAssetModel(fixedAsset.getModel());
-        responseDTO.setFixedAssetYear(fixedAsset.getYear());
+        // responseDTO.setFixedAssetModel(fixedAsset.getModel());
+        // responseDTO.setFixedAssetYear(fixedAsset.getYear());
         responseDTO.setFixedAssetPrice(fixedAsset.getPrice());
-        responseDTO.setFixedAssetSerialNumber(fixedAsset.getSerialNumber());
+        // responseDTO.setFixedAssetSerialNumber(fixedAsset.getSerialNumber());
         responseDTO.setFixedAssetPurchaseDate(fixedAsset.getPurchaseDate());
-        responseDTO.setFixedAssetUnit(fixedAsset.getUnit());
+        // responseDTO.setFixedAssetUnit(fixedAsset.getUnit());
         responseDTO.setFixedAssetQuantity(fixedAsset.getQuantity());
         responseDTO.setFixedAssetRemarks(fixedAsset.getRemarks());
         // responseDTO.setFixedAssetStatus(fixedAsset.getStatus());
-        responseDTO.setFixedAssetStatusText(fixedAsset.getStatustext());
+        // responseDTO.setFixedAssetStatusText(fixedAsset.getStatustext());
         // responseDTO.setFixedAssetUser(fixedAsset.getUser() != null ?
         // fixedAsset.getUser().getName() : null);
 
@@ -220,16 +220,16 @@ public class FileDataServiceImpl implements FileDataService {
             responseDTO.setFixedAssetId(fixedAsset.getId());
             responseDTO.setFixedAssetName(fixedAsset.getName());
             responseDTO.setFixedAssetCategory(fixedAsset.getCategory().getName());
-            responseDTO.setFixedAssetModel(fixedAsset.getModel());
-            responseDTO.setFixedAssetYear(fixedAsset.getYear());
+            // responseDTO.setFixedAssetModel(fixedAsset.getModel());
+            // responseDTO.setFixedAssetYear(fixedAsset.getYear());
             responseDTO.setFixedAssetPrice(fixedAsset.getPrice());
-            responseDTO.setFixedAssetSerialNumber(fixedAsset.getSerialNumber());
+            // responseDTO.setFixedAssetSerialNumber(fixedAsset.getSerialNumber());
             responseDTO.setFixedAssetPurchaseDate(fixedAsset.getPurchaseDate());
-            responseDTO.setFixedAssetUnit(fixedAsset.getUnit());
+            // responseDTO.setFixedAssetUnit(fixedAsset.getUnit());
             responseDTO.setFixedAssetQuantity(fixedAsset.getQuantity());
             responseDTO.setFixedAssetRemarks(fixedAsset.getRemarks());
             // responseDTO.setFixedAssetStatus(fixedAsset.getStatus());
-            responseDTO.setFixedAssetStatusText(fixedAsset.getStatustext());
+            // responseDTO.setFixedAssetStatusText(fixedAsset.getStatustext());
             // responseDTO.setFixedAssetBuilding(
             //         // fixedAsset.getBuilding() != null ? fixedAsset.getBuilding().getName() : null);
             // responseDTO.setFixedAssetAssetHolder(
