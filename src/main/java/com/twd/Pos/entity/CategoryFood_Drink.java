@@ -11,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 import jakarta.persistence.CascadeType;
@@ -36,6 +38,16 @@ public class CategoryFood_Drink {
 
     @Column(name = "updated_at")
     private LocalDateTime update_at;
+
+    @PrePersist
+    protected void onCreate() {
+        this.create_at = LocalDateTime.now(); // Set create_at to current time
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.update_at = LocalDateTime.now(); // Set update_at to current time
+    }
 
      @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCategoryFood_Drink> subCategoryFoodDrinks = new ArrayList<>();
