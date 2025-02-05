@@ -22,7 +22,7 @@ public class CategoryFoodDrinkServiceImpl implements CategoryFoodDrinkService {
     private SubCategoryFoodDrinkRepository subCategoryFoodDrinkRepository;
 
     @Override
-    public CategoryFood_Drink addSuCategoryFood_Drink(Integer categoryId, List<SubCategoryFood_Drink> subCategories) {
+    public CategoryFood_Drink addSuCategoryFood_Drink(Long categoryId, List<SubCategoryFood_Drink> subCategories) {
         try {
             Optional<CategoryFood_Drink> categoryOpt = categoryFoodDrinkRepository.findById(categoryId);
 
@@ -42,7 +42,7 @@ public class CategoryFoodDrinkServiceImpl implements CategoryFoodDrinkService {
     }
 
     @Override
-    public void deleteCategoryFood_Drink(Integer id) {
+    public void deleteCategoryFood_Drink(Long id) {
         try {
             if (categoryFoodDrinkRepository.existsById(id)) {
                 categoryFoodDrinkRepository.deleteById(id);
@@ -63,7 +63,7 @@ public class CategoryFoodDrinkServiceImpl implements CategoryFoodDrinkService {
         }
     }
     @Override
-    public Optional<CategoryFood_Drink> getCategoryById(Integer id) {
+    public Optional<CategoryFood_Drink> getCategoryById(Long id) {
         try {
             Optional<CategoryFood_Drink> category = categoryFoodDrinkRepository.findById(id);
             if (category.isPresent()) {
@@ -85,7 +85,7 @@ public class CategoryFoodDrinkServiceImpl implements CategoryFoodDrinkService {
         }
     }
     @Override
-    public CategoryFood_Drink updatCategoryFood_Drink(Integer id, CategoryFood_Drink upCategoryFood_Drink) {
+    public CategoryFood_Drink updatCategoryFood_Drink(Long id, CategoryFood_Drink upCategoryFood_Drink) {
         try {
             Optional<CategoryFood_Drink> existingCategoryOpt = categoryFoodDrinkRepository.findById(id);
 

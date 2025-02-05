@@ -22,7 +22,7 @@ public class SubCategoryFoodDrinkServiceImpl implements SubCategoryFoodDrinkServ
     private CategoryFoodDrinkRepository categoryFoodDrinkRepository;
 
     @Override
-    public SubCategoryFood_Drink addSubCategoryToCategory(Integer categoryId, SubCategoryFood_Drink subCategory) {
+    public SubCategoryFood_Drink addSubCategoryToCategory(Long categoryId, SubCategoryFood_Drink subCategory) {
        try {
         Optional<CategoryFood_Drink> categoryFood_Drinkopt = categoryFoodDrinkRepository.findById(categoryId);
         if(categoryFood_Drinkopt.isPresent()){

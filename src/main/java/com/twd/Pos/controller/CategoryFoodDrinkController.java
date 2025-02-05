@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ import com.twd.Pos.service.CategoryFoodDrinkService;
 @RestController
 @RequestMapping("/admin")
 public class CategoryFoodDrinkController {
-    
+
     @Autowired
     private CategoryFoodDrinkService categoryFoodDrinkService;
 
@@ -30,7 +32,7 @@ public class CategoryFoodDrinkController {
     }
 
     @GetMapping("/getAllCategoryFood_DrinkById/{id}")
-    public Optional<CategoryFood_Drink> getCategoryById(@PathVariable Integer id) {
+    public Optional<CategoryFood_Drink> getCategoryById(@PathVariable Long id) {
         return categoryFoodDrinkService.getCategoryById(id);
     }
 
@@ -41,25 +43,37 @@ public class CategoryFoodDrinkController {
 
     @PutMapping("/UpdateCategoryFoodDrink/{id}")
     public CategoryFood_Drink updateCategory(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @RequestBody CategoryFood_Drink updatedCategory) {
         return categoryFoodDrinkService.updatCategoryFood_Drink(id, updatedCategory);
     }
 
     @DeleteMapping("/deleteCagoryFoodDrink/{id}")
-    public String deleteCategory(@PathVariable Integer id) {
-        categoryFoodDrinkService.deleteCategoryFood_Drink(id);
-        return "Category with ID " + id + " deleted successfully.";
+    public String deleteCategory(@PathVariable Long id) {
+    categoryFoodDrinkService.deleteCategoryFood_Drink(id);
+    return "Category with ID " + id + " deleted successfully.";
     }
+
+    // @DeleteMapping("/deleteCagoryFoodDrink/{id}")
+    // public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+    //     try {
+    //         categoryFoodDrinkService.deleteCategoryFood_Drink(id); // Perform the deletion
+    //         return ResponseEntity.status(HttpStatus.NO_CONTENT) // 204 No Content - successful deletion
+    //                 .body("Category with ID " + id + " deleted successfully.");
+    //     } catch (RuntimeException e) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404 Not Found if category not found
+    //                 .body("Category with ID " + id + " not found.");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 500 Internal Server Error
+    //                 .body("Error deleting category: " + e.getMessage());
+    //     }
+    // }
 
     @PostMapping("/CreateCategoryFoodDrink/{id}/subcategories")
     public CategoryFood_Drink addSubCategoriesToCategory(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @RequestBody List<SubCategoryFood_Drink> subCategories) {
         return categoryFoodDrinkService.addSuCategoryFood_Drink(id, subCategories);
     }
-
-
-
 
 }

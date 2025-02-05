@@ -40,7 +40,7 @@ public class SubCategoryFoodDrinkController {
 
     @PostMapping("/subcategory/{categoryId}/add")
     public List<SubCategoryFood_Drink> addSubCategoriesToCategory(
-            @PathVariable Integer categoryId,
+            @PathVariable Long categoryId,
             @RequestBody List<SubCategoryFood_Drink> subCategories) {
         return subCategories.stream()
                 .map(subCategory -> subCategoryFoodDrinkService.addSubCategoryToCategory(categoryId, subCategory))
