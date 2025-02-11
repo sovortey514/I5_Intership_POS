@@ -17,4 +17,6 @@ public interface FileDataService {
     FixedAssetFileResponseDTO downloadAllFilesByFixedAssetId(Long fixedAssetId) throws IOException;
 
     List<FixedAssetFileResponseDTO> getAllAssetsWithImages() throws IOException;
+
+    
 }

@@ -60,4 +60,9 @@ public class SubCategoryFoodDrinkController {
         return "Subcategory with ID " + id + " deleted successfully.";
     }
 
+    @GetMapping("/subcategories")
+    public List<SubCategoryFood_Drink> getAllSubCategoriesWithCategory() {
+        return subCategoryFoodDrinkService.getAllSubCategoriesWithCategory();
+    }
+
 }

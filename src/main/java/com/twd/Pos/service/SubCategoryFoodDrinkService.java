@@ -8,6 +8,7 @@ import com.twd.Pos.entity.SubCategoryFood_Drink;
 public interface SubCategoryFoodDrinkService {
     
     List<SubCategoryFood_Drink> getAllSubCategories();
+    List<SubCategoryFood_Drink> getAllSubCategoriesWithCategory();
     Optional<SubCategoryFood_Drink> getSubCategoryById(Long id);
     SubCategoryFood_Drink saveSubCategoryFood_Drink(SubCategoryFood_Drink subCategory);
     SubCategoryFood_Drink addSubCategoryToCategory(Long categoryId, SubCategoryFood_Drink subCategory);

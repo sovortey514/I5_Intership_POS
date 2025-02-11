@@ -3,6 +3,7 @@ package com.twd.Pos.entity;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -35,8 +38,19 @@ public class SubCategoryFood_Drink {
     @Column(name = "updated_at")
     private LocalDateTime update_at;
 
+     @PrePersist
+    protected void onCreate() {
+        this.create_at = LocalDateTime.now();
+        this.create_at = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.update_at = LocalDateTime.now();
+    }
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false) 
-    @JsonIgnore 
+   @JsonIgnoreProperties("subCategoryFoodDrinks")
     private CategoryFood_Drink category;
 }

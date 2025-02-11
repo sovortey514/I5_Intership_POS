@@ -32,10 +32,13 @@ public class FileData {
     private String filePath;
 
     @OneToOne
-    @JoinColumn(name = "fixed_asset_id",  nullable = false)
+    @JoinColumn(name = "fixed_asset_id",  nullable = true)
     private Material fixedAsset;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private OurUsers user;
+
+    @OneToOne(mappedBy = "image")
+    private Food food;
 }

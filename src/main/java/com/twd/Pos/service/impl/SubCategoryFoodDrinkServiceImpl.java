@@ -102,5 +102,10 @@ public class SubCategoryFoodDrinkServiceImpl implements SubCategoryFoodDrinkServ
             throw new RuntimeException("Error updating subcategory: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<SubCategoryFood_Drink> getAllSubCategoriesWithCategory() {
+        return subCategoryFoodDrinkRepository.findAllWithCategory(); // Use findAllWithCategory() if needed
+    }
     
 }
