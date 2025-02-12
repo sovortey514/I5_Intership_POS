@@ -1,3 +1,4 @@
+
 package com.twd.Pos.controller;
 
 import java.io.IOException;
@@ -6,18 +7,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.twd.Pos.dto.FixedAssetFileResponseDTO;
-import com.twd.Pos.service.FileDataService;
-
 import org.springframework.http.MediaType;
+
+import com.twd.Pos.dto.FoodFileResponseDTO;
+import com.twd.Pos.service.FileDataService;
 
 @RestController
 @RequestMapping("/admin")
@@ -26,21 +21,21 @@ public class FileDataRestController {
     @Autowired
     private FileDataService fileDataService;
 
-    @PostMapping("/upload_image")
-    public ResponseEntity<?> uploadImageToFileDirectory(
+    @PostMapping("/upload_food_image")
+    public ResponseEntity<?> uploadImageToFoodDirectory(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("fixedAssetId") Long fixedAssetId) throws IOException {
+            @RequestParam("foodId") Long foodId) throws IOException {
 
-        // Call the service method with both file and fixedAssetId
-        String uploadFile = fileDataService.uploadFileToFileDirectory(file, fixedAssetId);
+   
+        String uploadFile = fileDataService.uploadFileToFoodDirectory(file, foodId);
 
         return ResponseEntity.status(HttpStatus.OK).body(uploadFile);
     }
 
-    @GetMapping("/get_images_by_asset/{fixedAssetId}")
-    public ResponseEntity<?> downloadAllImagesByFixedAssetId(@PathVariable Long fixedAssetId) {
+    @GetMapping("/get_images_by_food/{foodId}")
+    public ResponseEntity<?> downloadAllImagesByFoodId(@PathVariable Long foodId) {
         try {
-            FixedAssetFileResponseDTO files = fileDataService.downloadAllFilesByFixedAssetId(fixedAssetId);
+            FoodFileResponseDTO files = fileDataService.downloadAllFilesByFoodId(foodId);
             return ResponseEntity.status(HttpStatus.OK).body(files);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -71,15 +66,15 @@ public class FileDataRestController {
         }
     }
 
-    @GetMapping("/get_all_assets_with_images")
-    public ResponseEntity<?> getAllAssetsWithImages() {
+
+    @GetMapping("/get_all_foods_with_images")
+    public ResponseEntity<?> getAllFoodsWithImages() {
         try {
-            List<FixedAssetFileResponseDTO> assetsWithImages = fileDataService.getAllAssetsWithImages();
-            return ResponseEntity.status(HttpStatus.OK).body(assetsWithImages);
+            List<FoodFileResponseDTO> foodsWithImages = fileDataService.getAllFoodsWithImages();
+            return ResponseEntity.status(HttpStatus.OK).body(foodsWithImages);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error retrieving assets: " + e.getMessage());
+                    .body("Error retrieving foods: " + e.getMessage());
         }
     }
-
 }

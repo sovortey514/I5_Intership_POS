@@ -31,14 +31,19 @@ public class FileData {
 
     private String filePath;
 
-    @OneToOne
-    @JoinColumn(name = "fixed_asset_id",  nullable = true)
-    private Material fixedAsset;
+    // @OneToOne
+    // @JoinColumn(name = "fixed_asset_id",  nullable = false)
+    // private Material fixedAsset;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private OurUsers user;
 
-    @OneToOne(mappedBy = "image")
-    private Food food;
+    // @OneToOne(mappedBy = "image")
+    // private Food food;
+
+    @ManyToOne
+@JoinColumn(name = "food_id", nullable = false)
+private Food food;
+
 }

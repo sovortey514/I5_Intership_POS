@@ -51,9 +51,9 @@ public class Material {
     @JoinColumn(name = "user_id")
     private OurUsers user;
 
-    @OneToOne(mappedBy = "fixedAsset")
-    @JsonIgnore
-    private FileData fileData;
+    // @OneToOne(mappedBy = "fixedAsset")
+    // @JsonIgnore
+    // private FileData fileData;
 
     @Lob
     @Column(name = "image")
