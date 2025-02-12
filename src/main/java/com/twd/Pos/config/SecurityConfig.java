@@ -40,7 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**").permitAll()
                 .requestMatchers("/admin/get_image/**").permitAll()
                 .requestMatchers("/admin/upload_food_image").permitAll()
-
+                .requestMatchers("/admin/update_file/**").permitAll()
+                .requestMatchers("/admin/delete_file/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("USER", "ADMIN")

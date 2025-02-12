@@ -77,4 +77,29 @@ public class FileDataRestController {
                     .body("Error retrieving foods: " + e.getMessage());
         }
     }
+
+    @DeleteMapping("/delete_file/{fileName}")
+    public ResponseEntity<?> deleteFile(@PathVariable String fileName) {
+        try {
+            String response = fileDataService.deleteFileFromFoodDirectory(fileName);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error deleting file: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/update_file/{oldFileName}")
+    public ResponseEntity<?> updateFile(
+            @PathVariable String oldFileName,
+            @RequestParam("file") MultipartFile newFile,
+            @RequestParam("foodId") Long foodId) {
+        try {
+            String response = fileDataService.updateFileInFoodDirectory(oldFileName, newFile, foodId);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating file: " + e.getMessage());
+        }
+    }
 }

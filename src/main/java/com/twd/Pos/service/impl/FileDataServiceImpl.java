@@ -93,13 +93,13 @@ public class FileDataServiceImpl implements FileDataService {
         }
 
         Food food = foodOpt.get();
-        List<FileData> fileDataList = fileDataRepository.findByFoodId(food.getId()); // ✅ Fix method name
+        List<FileData> fileDataList = fileDataRepository.findByFoodId(food.getId()); 
 
         List<FileDataDTO> fileDataDTOs = fileDataList.stream()
-                .map(FileDataDTO::new) // ✅ Fix constructor usage
+                .map(FileDataDTO::new) 
                 .collect(Collectors.toList());
 
-        return new FoodFileResponseDTO(food, fileDataDTOs); // ✅ Fix constructor usage
+        return new FoodFileResponseDTO(food, fileDataDTOs); 
     }
 
 
@@ -119,6 +119,39 @@ public class FileDataServiceImpl implements FileDataService {
 
             return new FoodFileResponseDTO(food, files);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public String deleteFileFromFoodDirectory(String fileName) throws IOException {
+        Optional<FileData> fileDataOpt = fileDataRepository.findByName(fileName);
+        
+        if (!fileDataOpt.isPresent()) {
+            throw new IOException("File not found in database: " + fileName);
+        }
+
+        FileData fileData = fileDataOpt.get();
+        String filePath = fileData.getFilePath();
+        File file = new File(filePath);
+
+        
+        if (file.exists()) {
+            if (!file.delete()) {
+                throw new IOException("Failed to delete file from directory: " + filePath);
+            }
+        }
+
+  
+        fileDataRepository.delete(fileData);
+
+        return "File deleted successfully: " + fileName;
+    }
+
+    @Override
+    public String updateFileInFoodDirectory(String oldFileName, MultipartFile newFile, Long foodId) throws IOException {
+
+        deleteFileFromFoodDirectory(oldFileName);
+
+        return uploadFileToFoodDirectory(newFile, foodId);
     }
 
 }
