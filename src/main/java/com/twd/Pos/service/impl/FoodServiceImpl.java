@@ -68,6 +68,7 @@ public class FoodServiceImpl implements FoodService {
         foodRepository.delete(food);
     }
 
+
     @Override
     public List<Food> getAllFoods() {
         return foodRepository.findAll();
@@ -78,33 +79,66 @@ public class FoodServiceImpl implements FoodService {
         return foodRepository.findById(id);
     }
 
-    @Override
-    public Food updateFood(Long foodId, String name, String description, BigDecimal price,
-            Long categoryId, Long subCategoryId, Long sizeId) {
+//     @Override
+//     public Food updateFood(Long foodId, String name, String description, BigDecimal price,
+//             Long categoryId, Long subCategoryId, Long sizeId) {
 
-        Food food = foodRepository.findByIdWithFiles(foodId)
-                .orElseThrow(() -> new RuntimeException("Food not found"));
+//         Food food = foodRepository.findByIdWithFiles(foodId)
+//                 .orElseThrow(() -> new RuntimeException("Food not found"));
 
-        CategoryFood_Drink category = categoryFoodDrinkRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+//         CategoryFood_Drink category = categoryFoodDrinkRepository.findById(categoryId)
+//                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        Size size = sizeRepository.findById(sizeId)
-                .orElseThrow(() -> new RuntimeException("Size not found"));
+//         Size size = sizeRepository.findById(sizeId)
+//                 .orElseThrow(() -> new RuntimeException("Size not found"));
 
-        SubCategoryFood_Drink subCategory = null;
-        if (subCategoryId != null) {
-            subCategory = subCategoryFoodDrinkRepository.findById(subCategoryId)
-                    .orElseThrow(() -> new RuntimeException("Subcategory not found"));
-        }
+//         SubCategoryFood_Drink subCategory = null;
+//         if (subCategoryId != null) {
+//             subCategory = subCategoryFoodDrinkRepository.findById(subCategoryId)
+//                     .orElseThrow(() -> new RuntimeException("Subcategory not found"));
+//         }
 
-        food.setName(name);
-        food.setDescription(description);
-        food.setPrice(price);
-        food.setCategoryFood_Drink(category);
-        food.setSubCategoryFood_Drink(subCategory);
-        food.setSize(size);
+//         food.setName(name);
+//         food.setDescription(description);
+//         food.setPrice(price);
+//         food.setCategoryFood_Drink(category);
+//         food.setSubCategoryFood_Drink(subCategory);
+//         food.setSize(size);
 
-        return foodRepository.save(food);
+//         return foodRepository.save(food);
+//     }
+
+@Override
+public Food updateFood(Long foodId, String name, String description, BigDecimal price,
+        Long categoryId, Long subCategoryId, Long sizeId) {
+
+    // Fetch existing food entity
+    Food food = foodRepository.findById(foodId)
+            .orElseThrow(() -> new RuntimeException("Food not found"));
+
+    // Fetch related entities (category, subcategory, size)
+    CategoryFood_Drink category = categoryFoodDrinkRepository.findById(categoryId)
+            .orElseThrow(() -> new RuntimeException("Category not found"));
+
+    Size size = sizeRepository.findById(sizeId)
+            .orElseThrow(() -> new RuntimeException("Size not found"));
+
+    SubCategoryFood_Drink subCategory = null;
+    if (subCategoryId != null) {
+        subCategory = subCategoryFoodDrinkRepository.findById(subCategoryId)
+                .orElseThrow(() -> new RuntimeException("Subcategory not found"));
     }
+
+    // Update all fields in the existing food entity
+    food.setName(name);
+    food.setDescription(description);
+    food.setPrice(price);
+    food.setCategoryFood_Drink(category);
+    food.setSubCategoryFood_Drink(subCategory);
+    food.setSize(size);
+
+    return foodRepository.save(food);
+}
+
 
 }
