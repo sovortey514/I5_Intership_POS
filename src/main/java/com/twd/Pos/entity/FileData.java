@@ -34,7 +34,7 @@ public class FileData {
     private String filePath;
 
     // @OneToOne
-    // @JoinColumn(name = "fixed_asset_id",  nullable = false)
+    // @JoinColumn(name = "fixed_asset_id", nullable = false)
     // private Material fixedAsset;
 
     @ManyToOne
@@ -45,8 +45,8 @@ public class FileData {
     // private Food food;
 
     @ManyToOne
-@JoinColumn(name = "food_id", nullable = false)
-@JsonIgnore
-private Food food;
+    @JoinColumn(name = "food_id", nullable = false)
+    @JsonIgnore
+    private Food food;
 
 }
