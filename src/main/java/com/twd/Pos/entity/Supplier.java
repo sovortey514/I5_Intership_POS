@@ -30,4 +30,7 @@ public class Supplier {
 
     @Column(nullable = false)
     private String country;
+
+    @Column(nullable = false) 
+    private String type;
 }
