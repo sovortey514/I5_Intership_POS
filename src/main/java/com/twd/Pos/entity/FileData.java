@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "file_data")
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor // Ensure this is present for the default constructor
+@NoArgsConstructor 
 public class FileData {
 
     @Id
@@ -33,16 +33,10 @@ public class FileData {
 
     private String filePath;
 
-    // @OneToOne
-    // @JoinColumn(name = "fixed_asset_id", nullable = false)
-    // private Material fixedAsset;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private OurUsers user;
 
-    // @OneToOne(mappedBy = "image")
-    // private Food food;
 
     @ManyToOne
     @JoinColumn(name = "food_id", nullable = false)

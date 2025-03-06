@@ -20,4 +20,6 @@ public interface FileDataRepository extends JpaRepository<FileData, Long>{
 
     @Query("SELECT f FROM FileData f WHERE f.food.id = :foodId")
     List<FileData> findByFoodId(@Param("foodId") Long foodId);
+
+    boolean existsByFilePath(String filePath);
 }

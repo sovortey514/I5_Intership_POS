@@ -16,4 +16,5 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
     Optional<Food> findByIdWithFiles(@Param("foodId") Long foodId);
     
     
+    
 }
