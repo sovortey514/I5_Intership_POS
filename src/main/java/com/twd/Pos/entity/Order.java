@@ -2,7 +2,6 @@ package com.twd.Pos.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,42 +24,44 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "Food")
-public class Food {
+@Table(name = "orders")
+public class Order {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+     @JsonIgnore
+    private OurUsers user;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "table_id", nullable = false)
+    @JsonIgnore
+    private Tables table;
+
+    
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderItem> orderItems;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    private BigDecimal discount = BigDecimal.ZERO;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    @JsonIgnore
-    private CategoryFood_Drink categoryFood_Drink;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal total;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sub_category_id")
-    @JsonIgnore
-    private SubCategoryFood_Drink subCategoryFood_Drink;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Payment payment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "size_id")
-    @JsonIgnore
-    private Size size;
+    @Column(nullable = false)
+    private String status;  // "PENDING", "COMPLETED", "CANCELLED"
 
-    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<FileData> files = new ArrayList<>();
+  
+    @Column(nullable = false)
+    private String paymentStatus = "UNPAID";
 
-    @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OrderItem> orderItems = new ArrayList<>();
-    
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -71,10 +72,16 @@ public class Food {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
+        status = "PENDING";
+        paymentStatus = "UNPAID";
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+
+
+
 }

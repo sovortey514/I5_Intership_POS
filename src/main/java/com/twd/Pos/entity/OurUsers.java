@@ -25,9 +25,11 @@ public class OurUsers implements UserDetails {
     private boolean enabled;
 
     @OneToMany(mappedBy = "user")
-    private Set<FileData> files; 
+    private Set<FileData> files;
     
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders;
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
