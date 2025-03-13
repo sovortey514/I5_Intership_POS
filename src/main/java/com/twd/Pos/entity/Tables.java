@@ -2,6 +2,8 @@ package com.twd.Pos.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -38,6 +40,7 @@ public class Tables {
     private String location;
 
      @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     @JsonIgnore
     private List<Order> orders;
 
     @ElementCollection

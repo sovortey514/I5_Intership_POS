@@ -41,9 +41,8 @@ public class Order {
     @JsonIgnore
     private Tables table;
 
-    
-
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<OrderItem> orderItems;
 
     @Column(nullable = false, precision = 10, scale = 2)

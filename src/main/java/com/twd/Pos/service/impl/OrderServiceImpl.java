@@ -44,24 +44,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancelOrder(Long orderId) {
         try {
-            // Find Order
+
             Optional<Order> optionalOrder = orderRepository.findById(orderId);
             if (optionalOrder.isEmpty()) {
                 throw new RuntimeException("Order not found");
             }
             Order order = optionalOrder.get();
 
-            // Validate Order Status
             if (!order.getStatus().equalsIgnoreCase("PENDING")) {
                 throw new RuntimeException("Only PENDING orders can be canceled");
             }
 
-            // Mark Order as CANCELLED
             order.setStatus("CANCELLED");
 
-            // Free Up Table
             Tables table = order.getTable();
-            table.setStatus("AVAILABLE");
+            table.setStatus("available");
             tableRepository.save(table);
 
             return orderRepository.save(order);
@@ -77,17 +74,14 @@ public class OrderServiceImpl implements OrderService {
         try {
             Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new RuntimeException("Order not found"));
-
-            // Ensure the order is paid before completing
             if (!order.getPaymentStatus().equalsIgnoreCase("PAID")) {
                 throw new RuntimeException("Order must be paid before completion");
             }
 
             order.setStatus("COMPLETED");
 
-            // Free Up Table
             Tables table = order.getTable();
-            table.setStatus("AVAILABLE");
+            table.setStatus("available");
             tableRepository.save(table);
 
             return orderRepository.save(order);
@@ -96,117 +90,63 @@ public class OrderServiceImpl implements OrderService {
             return null;
         }
     }
+    @Override
+    @Transactional
+    public Order createOrder(Long userId, Long tableId, List<OrderItem> orderItems) {
+        try {
 
-//     @Override
-// @Transactional
-// public Order createOrder(Long userId, Long tableId, List<OrderRequest.OrderItemRequest> orderItemRequests) {
-//     try {
-//         // Validate User
-//         OurUsers user = ourUserRepo.findById(userId)
-//                 .orElseThrow(() -> new RuntimeException("User not found"));
+            OurUsers user = ourUserRepo.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-//         // Validate Table
-//         Tables table = tableRepository.findById(tableId)
-//                 .orElseThrow(() -> new RuntimeException("Table not found"));
+            Tables table = tableRepository.findById(tableId)
+                    .orElseThrow(() -> new RuntimeException("Table not found"));
 
-//         if (!table.getStatus().equalsIgnoreCase("AVAILABLE")) {
-//             throw new RuntimeException("Table is not available");
-//         }
+            if (!table.getStatus().equalsIgnoreCase("AVAILABLE")) {
+                throw new RuntimeException("Table is not available");
+            }
 
-//         // Mark Table as OCCUPIED
-//         table.setStatus("OCCUPIED");
-//         tableRepository.save(table);
+            table.setStatus("OCCUPIED");
+            tableRepository.save(table);
 
-//         // Create Order
-//         Order order = new Order();
-//         order.setUser(user);
-//         order.setTable(table);
-//         order.setStatus("PENDING");
-//         order.setPaymentStatus("UNPAID");
+            Order order = new Order();
+            order.setUser(user);
+            order.setTable(table);
+            order.setStatus("PENDING");
+            order.setPaymentStatus("UNPAID");
 
-//         // Calculate Total Price & Create OrderItems
-//         BigDecimal total = BigDecimal.ZERO;
-//         List<OrderItem> orderItems = new ArrayList<>();
+            BigDecimal total = BigDecimal.ZERO;
+            for (OrderItem item : orderItems) {
+                Food food = foodRepository.findById(item.getFood().getId())
+                        .orElseThrow(() -> new RuntimeException("Food item not found"));
 
-//         for (OrderRequest.OrderItemRequest itemRequest : orderItemRequests) {
-//             Food food = foodRepository.findById(itemRequest.getFoodId())
-//                     .orElseThrow(() -> new RuntimeException("Food item not found"));
+                item.setOrder(order);
+                item.setPrice(food.getPrice());
+                total = total.add(food.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+            }
 
-//             OrderItem item = new OrderItem();
-//             item.setOrder(order);
-//             item.setFood(food);
-//             item.setQuantity(itemRequest.getQuantity());
-//             item.setPrice(food.getPrice());
+            order.setOrderItems(orderItems);
+            order.setTotal(total);
 
-//             total = total.add(food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity())));
-//             orderItems.add(item);
-//         }
+            orderRepository.save(order);
+            orderItemRepository.saveAll(orderItems);
 
-//         order.setOrderItems(orderItems);
-//         order.setTotal(total);
-
-//         // Save Order and Items
-//         orderRepository.save(order);
-//         orderItemRepository.saveAll(orderItems);
-
-//         return order;
-//     } catch (Exception e) {
-//         System.err.println("❌ Error in createOrder: " + e.getMessage());
-//         throw new RuntimeException("Failed to create order: " + e.getMessage());
-//     }
-// }
-
-@Override
-@Transactional
-public Order createOrder(Long userId, Long tableId, List<OrderItem> orderItems) {
-    try {
-        // Validate User
-        OurUsers user = ourUserRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Validate Table
-        Tables table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Table not found"));
-
-        if (!table.getStatus().equalsIgnoreCase("AVAILABLE")) {
-            throw new RuntimeException("Table is not available");
+            return order;
+        } catch (Exception e) {
+            System.err.println("❌ Error in createOrder: " + e.getMessage());
+            throw new RuntimeException("Failed to create order: " + e.getMessage());
         }
-
-        // Mark Table as OCCUPIED
-        table.setStatus("OCCUPIED");
-        tableRepository.save(table);
-
-        // Create Order
-        Order order = new Order();
-        order.setUser(user);
-        order.setTable(table);
-        order.setStatus("PENDING");
-        order.setPaymentStatus("UNPAID");
-
-        // Calculate Total Price & Validate `Food` in `OrderItem`
-        BigDecimal total = BigDecimal.ZERO;
-        for (OrderItem item : orderItems) {
-            Food food = foodRepository.findById(item.getFood().getId())
-                    .orElseThrow(() -> new RuntimeException("Food item not found"));
-
-            item.setOrder(order);
-            item.setPrice(food.getPrice());
-            total = total.add(food.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
-        }
-
-        order.setOrderItems(orderItems);
-        order.setTotal(total);
-
-        // Save Order and Items
-        orderRepository.save(order);
-        orderItemRepository.saveAll(orderItems);
-
-        return order;
-    } catch (Exception e) {
-        System.err.println("❌ Error in createOrder: " + e.getMessage());
-        throw new RuntimeException("Failed to create order: " + e.getMessage());
     }
-}
 
+    @Transactional
+    @Override
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
 
+    @Transactional
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
 }
