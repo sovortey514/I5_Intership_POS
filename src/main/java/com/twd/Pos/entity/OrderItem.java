@@ -2,6 +2,7 @@ package com.twd.Pos.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -18,6 +19,7 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
     @JoinColumn(name = "order_id", nullable = false)
     @JsonIgnore 
+    @JsonBackReference
     private Order order;
     
     @ManyToOne(fetch = FetchType.EAGER) 
