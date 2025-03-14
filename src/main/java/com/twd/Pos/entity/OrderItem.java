@@ -15,13 +15,13 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // ✅ Ensure cascading
     @JoinColumn(name = "order_id", nullable = false)
-    @JsonIgnore
     private Order order;
-
+    
     @ManyToOne(fetch = FetchType.EAGER) // Changed to EAGER to always load the Food object
     @JoinColumn(name = "food_id", nullable = false)
+    @JsonIgnore
     private Food food;
 
     @Column(nullable = false)

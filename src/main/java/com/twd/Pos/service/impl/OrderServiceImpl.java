@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.twd.Pos.dto.OrderItemRequest;
 import com.twd.Pos.dto.OrderRequest;
 import com.twd.Pos.entity.Food;
 import com.twd.Pos.entity.Order;
@@ -90,52 +91,6 @@ public class OrderServiceImpl implements OrderService {
             return null;
         }
     }
-    @Override
-    @Transactional
-    public Order createOrder(Long userId, Long tableId, List<OrderItem> orderItems) {
-        try {
-
-            OurUsers user = ourUserRepo.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            Tables table = tableRepository.findById(tableId)
-                    .orElseThrow(() -> new RuntimeException("Table not found"));
-
-            if (!table.getStatus().equalsIgnoreCase("AVAILABLE")) {
-                throw new RuntimeException("Table is not available");
-            }
-
-            table.setStatus("OCCUPIED");
-            tableRepository.save(table);
-
-            Order order = new Order();
-            order.setUser(user);
-            order.setTable(table);
-            order.setStatus("PENDING");
-            order.setPaymentStatus("UNPAID");
-
-            BigDecimal total = BigDecimal.ZERO;
-            for (OrderItem item : orderItems) {
-                Food food = foodRepository.findById(item.getFood().getId())
-                        .orElseThrow(() -> new RuntimeException("Food item not found"));
-
-                item.setOrder(order);
-                item.setPrice(food.getPrice());
-                total = total.add(food.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
-            }
-
-            order.setOrderItems(orderItems);
-            order.setTotal(total);
-
-            orderRepository.save(order);
-            orderItemRepository.saveAll(orderItems);
-
-            return order;
-        } catch (Exception e) {
-            System.err.println("❌ Error in createOrder: " + e.getMessage());
-            throw new RuntimeException("Failed to create order: " + e.getMessage());
-        }
-    }
 
     @Transactional
     @Override
@@ -149,4 +104,62 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
+
+    @Override
+    @Transactional
+    public Order createOrder(Long userId, Long tableId, List<OrderItemRequest> itemRequests) {
+        if (itemRequests == null || itemRequests.isEmpty()) {
+            throw new IllegalArgumentException("❌ Order must contain at least one valid item.");
+        }
+
+        OurUsers user = ourUserRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Tables table = tableRepository.findById(tableId)
+                .orElseThrow(() -> new RuntimeException("Table not found"));
+
+        if (!"AVAILABLE".equalsIgnoreCase(table.getStatus())) {
+            throw new RuntimeException("Table is not available");
+        }
+
+        table.setStatus("OCCUPIED");
+        tableRepository.save(table);
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setTable(table);
+        order.setStatus("PENDING");
+        order.setPaymentStatus("UNPAID");
+        order.setTotal(BigDecimal.ZERO);
+
+        order = orderRepository.saveAndFlush(order); 
+
+        System.out.println("✅ Order ID after save: " + order.getId()); 
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (OrderItemRequest itemRequest : itemRequests) {
+            Food food = foodRepository.findById(itemRequest.getFoodId())
+                    .orElseThrow(() -> new RuntimeException("Food item not found"));
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order); 
+            orderItem.setFood(food);
+            orderItem.setQuantity(itemRequest.getQuantity());
+            orderItem.setPrice(food.getPrice());
+
+            BigDecimal itemTotal = food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+            total = total.add(itemTotal);
+            orderItems.add(orderItem);
+        }
+
+        orderItemRepository.saveAll(orderItems);
+
+        order.setOrderItems(orderItems);
+        order.setTotal(total);
+
+        return orderRepository.save(order);
+    }
+
 }

@@ -59,6 +59,7 @@ public class Food {
     private List<FileData> files = new ArrayList<>();
 
     @OneToMany(mappedBy = "food", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
     
     @Column(nullable = false, updatable = false)

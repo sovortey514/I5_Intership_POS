@@ -26,12 +26,10 @@ public class OrderController {
 
     @PostMapping("/create")
     public Order createOrder(@RequestBody OrderRequest request) {
-        return orderService.createOrder(request.getUserId(), request.getTableId(), request.getOrderItems());
+        return orderService.createOrder(request.getUserId(), request.getTableId(), request.getItems());
     }
 
 
-    
-    
 
     @PutMapping("/complete/{orderId}")
     public Order completeOrder(@PathVariable Long orderId) {
