@@ -32,4 +32,7 @@ public class Payment {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime paymentDate;
+
+    @Column(nullable = false)
+    private String status;
 }

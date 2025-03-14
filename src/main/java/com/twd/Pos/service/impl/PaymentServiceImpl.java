@@ -1,7 +1,9 @@
 package com.twd.Pos.service.impl;
 
+import com.twd.Pos.entity.Membership;
 import com.twd.Pos.entity.Order;
 import com.twd.Pos.entity.Payment;
+import com.twd.Pos.repository.MembershipRepository;
 import com.twd.Pos.repository.OrderRepository;
 import com.twd.Pos.repository.PaymentRepository;
 import com.twd.Pos.service.PaymentService;
@@ -20,6 +22,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private MembershipRepository membershipRepository;
 
     @Transactional
     @Override
@@ -47,4 +52,40 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentRepository.save(payment);
     }
+
+    @Override
+    @Transactional
+    public Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod,
+            String membershipId) {
+        
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        Membership membership = membershipRepository.findByMembershipId(membershipId)
+                .orElseThrow(() -> new RuntimeException("Membership card not found"));
+
+        if (membership.getBalance() < amountPaid.doubleValue()) {
+            throw new RuntimeException("Insufficient balance on membership card");
+        }
+
+        membership.setBalance(membership.getBalance() - amountPaid.doubleValue());
+        membershipRepository.save(membership); 
+
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setAmountPaid(amountPaid);
+        payment.setPaymentMethod(paymentMethod); 
+        payment.setStatus("PAID");
+        payment.setPaymentDate(LocalDateTime.now()); 
+
+
+        order.setPaymentStatus("PAID");
+
+    
+        payment = paymentRepository.save(payment); 
+        orderRepository.save(order); 
+
+        return payment; 
+    }
+
 }
