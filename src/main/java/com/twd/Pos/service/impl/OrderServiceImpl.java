@@ -132,9 +132,9 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentStatus("UNPAID");
         order.setTotal(BigDecimal.ZERO);
 
-        order = orderRepository.saveAndFlush(order); 
+        order = orderRepository.saveAndFlush(order);
 
-        System.out.println("✅ Order ID after save: " + order.getId()); 
+        System.out.println("✅ Order ID after save: " + order.getId());
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -144,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new RuntimeException("Food item not found"));
 
             OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order); 
+            orderItem.setOrder(order);
             orderItem.setFood(food);
             orderItem.setQuantity(itemRequest.getQuantity());
             orderItem.setPrice(food.getPrice());
@@ -162,4 +162,48 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(order);
     }
 
+    @Override
+    public Order addItemsToOrder(Long orderId, List<OrderItemRequest> itemRequests) {
+       try {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (!order.getStatus().equalsIgnoreCase("PENDING")) {
+            throw new RuntimeException("Cannot modify a completed or cancelled order");
+        }
+        BigDecimal total = order.getTotal();
+        List<OrderItem> additionalItems = new ArrayList<>();
+        for (OrderItemRequest itemRequest : itemRequests) {
+     
+            Food food = foodRepository.findById(itemRequest.getFoodId())
+                    .orElseThrow(() -> new RuntimeException("Food item not found"));
+
+          
+            OrderItem newItem = new OrderItem();
+            newItem.setOrder(order);  
+            newItem.setFood(food);
+            newItem.setQuantity(itemRequest.getQuantity());
+            newItem.setPrice(food.getPrice());
+
+            BigDecimal itemTotal = food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+            total = total.add(itemTotal);
+
+            additionalItems.add(newItem);
+
+            order.getOrderItems().addAll(additionalItems);
+        order.setTotal(total);
+
+        orderRepository.save(order);
+        orderItemRepository.saveAll(additionalItems);
+
+        return order;
+        }
+         return order;
+       } catch (Exception e) {
+        System.err.println("❌ Error in addItemsToOrder: " + e.getMessage());
+        throw new RuntimeException("Failed to update order items: " + e.getMessage());
+       }
+    }
+
+    
 }

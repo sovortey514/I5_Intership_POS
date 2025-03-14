@@ -40,7 +40,7 @@ public class Tables {
     private String location;
 
      @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     @JsonIgnore
+    //  @JsonIgnore
     private List<Order> orders;
 
     @ElementCollection
