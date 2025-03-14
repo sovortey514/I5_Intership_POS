@@ -134,6 +134,11 @@ public class OrderServiceImpl implements OrderService {
 
         order = orderRepository.saveAndFlush(order);
 
+        order.setCustomOrderId(generateCustomOrderId(order.getId()));
+    order = orderRepository.save(order);
+
+
+
         System.out.println("✅ Order ID after save: " + order.getId());
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -160,6 +165,9 @@ public class OrderServiceImpl implements OrderService {
         order.setTotal(total);
 
         return orderRepository.save(order);
+    }
+    private String generateCustomOrderId(Long id) {
+        return "#" + String.format("%06d", id);
     }
 
     @Override

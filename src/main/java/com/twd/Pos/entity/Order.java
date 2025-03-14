@@ -26,14 +26,17 @@ import lombok.Data;
 @Data
 @Table(name = "orders")
 public class Order {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String customOrderId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-     @JsonIgnore
+    @JsonIgnore
     private OurUsers user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +47,6 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<OrderItem> orderItems;
-    
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal discount = BigDecimal.ZERO;
@@ -56,9 +58,8 @@ public class Order {
     private Payment payment;
 
     @Column(nullable = false)
-    private String status;  // "PENDING", "COMPLETED", "CANCELLED"
+    private String status; // "PENDING", "COMPLETED", "CANCELLED"
 
-  
     @Column(nullable = false)
     private String paymentStatus = "UNPAID";
 
@@ -74,6 +75,7 @@ public class Order {
         updatedAt = LocalDateTime.now();
         status = "PENDING";
         paymentStatus = "UNPAID";
+        customOrderId = generateCustomOrderId();
     }
 
     @PreUpdate
@@ -81,7 +83,8 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-
-
+    private String generateCustomOrderId() {
+        return "#" + String.format("%06d", id);
+    }
 
 }

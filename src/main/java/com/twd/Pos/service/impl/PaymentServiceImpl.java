@@ -44,6 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setOrder(order);
         payment.setAmountPaid(amountPaid);
         payment.setPaymentMethod(paymentMethod);
+        payment.setStatus("PAID");
         payment.setSuccessful(true);
         payment.setPaymentDate(LocalDateTime.now());
 
