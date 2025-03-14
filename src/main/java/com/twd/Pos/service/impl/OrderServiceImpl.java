@@ -212,4 +212,47 @@ public class OrderServiceImpl implements OrderService {
         throw new RuntimeException("Failed to update order items: " + e.getMessage());
        }
     }
+
+    @Override
+    @Transactional
+    public Order removeItemsFromOrder(Long orderId, List<Long> itemIds) {
+        try {
+            // Retrieve the existing order
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+
+            // Ensure order is still modifiable
+            if (!order.getStatus().equalsIgnoreCase("PENDING")) {
+                throw new RuntimeException("Cannot modify a completed or cancelled order");
+            }
+
+            // Fetch items to be removed and update order
+            BigDecimal total = order.getTotal();
+            List<OrderItem> itemsToRemove = new ArrayList<>();
+            for (Long itemId : itemIds) {
+                OrderItem orderItem = orderItemRepository.findById(itemId)
+                        .orElseThrow(() -> new RuntimeException("Order item not found"));
+
+                if (!orderItem.getOrder().getId().equals(orderId)) {
+                    throw new RuntimeException("Order item does not belong to the specified order");
+                }
+
+                BigDecimal itemTotal = orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity()));
+                total = total.subtract(itemTotal);
+
+                itemsToRemove.add(orderItem);
+            }
+
+            order.getOrderItems().removeAll(itemsToRemove);
+            order.setTotal(total);
+
+            orderRepository.save(order);
+            orderItemRepository.deleteAll(itemsToRemove);
+
+            return order;
+        } catch (Exception e) {
+            System.err.println("❌ Error in removeItemsFromOrder: " + e.getMessage());
+            throw new RuntimeException("Failed to remove order items: " + e.getMessage());
+        }
+    }
 }

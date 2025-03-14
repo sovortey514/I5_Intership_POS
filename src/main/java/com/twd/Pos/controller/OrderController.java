@@ -57,7 +57,17 @@ public class OrderController {
     public ResponseEntity<Order> addItemsToOrder(@PathVariable Long orderId, @RequestBody List<OrderItemRequest> itemRequests) {
         try {
             Order updatedOrder = orderService.addItemsToOrder(orderId, itemRequests);
-            return ResponseEntity.ok(updatedOrder); // Return the updated order
+            return ResponseEntity.ok(updatedOrder); 
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PutMapping("/{orderId}/remove-items")
+    public ResponseEntity<Order> removeItemsFromOrder(@PathVariable Long orderId, @RequestBody List<Long> itemIds) {
+        try {
+            Order updatedOrder = orderService.removeItemsFromOrder(orderId, itemIds);
+            return ResponseEntity.ok(updatedOrder);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
