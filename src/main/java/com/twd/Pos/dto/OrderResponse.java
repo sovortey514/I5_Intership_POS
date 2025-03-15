@@ -12,6 +12,10 @@ public class OrderResponse {
     private BigDecimal total;
     private String status;
     private String paymentStatus;
+    private Long tableId;
+    private String tableName;
+    private String tableType;
+    private String tableLocation;
     private List<OrderItemResponse> orderItems;
 
     @Data

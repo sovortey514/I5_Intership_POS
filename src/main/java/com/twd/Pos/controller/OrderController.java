@@ -35,7 +35,7 @@ public class OrderController {
     // return orderService.createOrder(request.getUserId(), request.getTableId(),
     // request.getItems());
     // }
-    @PostMapping("/create")
+    @PostMapping("/placeordercontroller")
     public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
         // Call the service to create the order
         Order order = orderService.createOrder(orderRequest.getUserId(), orderRequest.getTableId(),
@@ -117,5 +117,21 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @GetMapping("/getordersummary/{orderId}")
+public ResponseEntity<List<OrderResponse>> getOrderSummaryById(@PathVariable Long orderId) {
+    try {
+        List<OrderResponse> orders = orderService.getOrderSummaryById(orderId);
+        if (orders.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(orders);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
+
+
+    
 
 }

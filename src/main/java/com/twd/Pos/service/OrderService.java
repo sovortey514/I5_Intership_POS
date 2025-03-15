@@ -15,8 +15,8 @@ public interface OrderService {
     Order addItemsToOrder(Long orderId, List<OrderItemRequest> itemRequests);
     Order removeItemsFromOrder(Long orderId, List<Long> itemIds);
     List<OrderResponse> getAllOrdersAsList();
+    List<OrderResponse> getOrderSummaryById(Long orderId);
 
-    // List<OrderResponse> getOrderDetails(Long orderId); 
-    
+
 
 }

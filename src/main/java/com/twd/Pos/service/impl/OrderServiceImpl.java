@@ -271,12 +271,58 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public List<OrderResponse> getAllOrdersAsList() {
+        List<Order> orders = orderRepository.findAll(); // Retrieve all orders from the repository
+
+        List<OrderResponse> orderResponses = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderResponse orderResponse = new OrderResponse();
+            orderResponse.setId(order.getId());
+            orderResponse.setCustomOrderId(order.getCustomOrderId());
+            orderResponse.setStatus(order.getStatus());
+            orderResponse.setPaymentStatus(order.getPaymentStatus());
+            orderResponse.setTotal(order.getTotal());
+
+            Tables table = order.getTable();
+            if (table != null) {
+                orderResponse.setTableId(table.getId());
+                orderResponse.setTableName(table.getName());
+                orderResponse.setTableType(table.getType());
+                orderResponse.setTableLocation(table.getLocation());
+            }
+
+            List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
+            for (OrderItem orderItem : order.getOrderItems()) {
+                Food food = orderItem.getFood();
+                OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
+                orderItemResponse.setFoodId(orderItem.getFood().getId());
+                orderItemResponse.setFoodName(orderItem.getFood().getName());
+                orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
+                orderItemResponse.setQuantity(orderItem.getQuantity());
+                orderItemResponse.setPrice(orderItem.getPrice());
+                orderItemResponse
+                        .setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+
+                orderItemResponses.add(orderItemResponse);
+            }
+            orderResponse.setOrderItems(orderItemResponses);
+            orderResponses.add(orderResponse);
+        }
+
+        return orderResponses;
+    }
+
+    @Override
 @Transactional
-public List<OrderResponse> getAllOrdersAsList() {
-    List<Order> orders = orderRepository.findAll();  // Retrieve all orders from the repository
+public List<OrderResponse> getOrderSummaryById(Long orderId) {
+    List<Order> orders = orderRepository.findById(orderId)
+            .stream()
+            .toList(); // Convert Optional to List
 
     List<OrderResponse> orderResponses = new ArrayList<>();
-    
+
     for (Order order : orders) {
         OrderResponse orderResponse = new OrderResponse();
         orderResponse.setId(order.getId());
@@ -285,57 +331,69 @@ public List<OrderResponse> getAllOrdersAsList() {
         orderResponse.setPaymentStatus(order.getPaymentStatus());
         orderResponse.setTotal(order.getTotal());
 
+        // ✅ Include Table Information
+        Tables table = order.getTable();
+        if (table != null) {
+            orderResponse.setTableId(table.getId());
+            orderResponse.setTableName(table.getName());
+            orderResponse.setTableType(table.getType());
+            orderResponse.setTableLocation(table.getLocation());
+        }
+
+        // ✅ Include Order Items
         List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
         for (OrderItem orderItem : order.getOrderItems()) {
             Food food = orderItem.getFood();
             OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
-            orderItemResponse.setFoodId(orderItem.getFood().getId());
-            orderItemResponse.setFoodName(orderItem.getFood().getName());
-            orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
+            orderItemResponse.setFoodId(food.getId());
+            orderItemResponse.setFoodName(food.getName());
+            orderItemResponse.setFoodDescription(food.getDescription());
             orderItemResponse.setQuantity(orderItem.getQuantity());
             orderItemResponse.setPrice(orderItem.getPrice());
-            orderItemResponse.setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+            orderItemResponse.setTotalPrice(food.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
 
             orderItemResponses.add(orderItemResponse);
         }
-        orderResponse.setOrderItems(orderItemResponses);
+        orderResponse.setOrderItems(orderItemResponses); // ✅ Add order items to response
+
         orderResponses.add(orderResponse);
     }
 
-    return orderResponses;
+    return orderResponses; // ✅ Return order list with items
 }
 
 
-//     @Override
-// @Transactional
-// public List<OrderResponse> getAllOrders() {
-//     List<Order> orders = orderRepository.findAll();
+    // @Override
+    // @Transactional
+    // public List<OrderResponse> getAllOrders() {
+    // List<Order> orders = orderRepository.findAll();
 
-//     List<OrderResponse> orderResponses = new ArrayList<>();
-//     for (Order order : orders) {
-//         OrderResponse orderResponse = new OrderResponse();
-//         orderResponse.setId(order.getId());
-//         orderResponse.setCustomOrderId(order.getCustomOrderId());
-//         orderResponse.setStatus(order.getStatus());
-//         orderResponse.setPaymentStatus(order.getPaymentStatus());
-//         orderResponse.setTotal(order.getTotal());
+    // List<OrderResponse> orderResponses = new ArrayList<>();
+    // for (Order order : orders) {
+    // OrderResponse orderResponse = new OrderResponse();
+    // orderResponse.setId(order.getId());
+    // orderResponse.setCustomOrderId(order.getCustomOrderId());
+    // orderResponse.setStatus(order.getStatus());
+    // orderResponse.setPaymentStatus(order.getPaymentStatus());
+    // orderResponse.setTotal(order.getTotal());
 
-//         List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
-//         for (OrderItem orderItem : order.getOrderItems()) {
-//             OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
-//             orderItemResponse.setFoodId(orderItem.getFood().getId());
-//             orderItemResponse.setFoodName(orderItem.getFood().getName());
-//             orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
-//             orderItemResponse.setQuantity(orderItem.getQuantity());
-//             orderItemResponse.setPrice(orderItem.getPrice());
-//             orderItemResponse.setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+    // List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
+    // for (OrderItem orderItem : order.getOrderItems()) {
+    // OrderResponse.OrderItemResponse orderItemResponse = new
+    // OrderResponse.OrderItemResponse();
+    // orderItemResponse.setFoodId(orderItem.getFood().getId());
+    // orderItemResponse.setFoodName(orderItem.getFood().getName());
+    // orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
+    // orderItemResponse.setQuantity(orderItem.getQuantity());
+    // orderItemResponse.setPrice(orderItem.getPrice());
+    // orderItemResponse.setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
 
-//             orderItemResponses.add(orderItemResponse);
-//         }
-//         orderResponse.setOrderItems(orderItemResponses);
-//         orderResponses.add(orderResponse);
-//     }
-//     return orderResponses;
-// }
+    // orderItemResponses.add(orderItemResponse);
+    // }
+    // orderResponse.setOrderItems(orderItemResponses);
+    // orderResponses.add(orderResponse);
+    // }
+    // return orderResponses;
+    // }
 
 }
