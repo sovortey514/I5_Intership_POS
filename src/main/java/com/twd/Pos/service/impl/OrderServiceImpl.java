@@ -1,9 +1,12 @@
 package com.twd.Pos.service.impl;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -315,85 +318,135 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-@Transactional
-public List<OrderResponse> getOrderSummaryById(Long orderId) {
-    List<Order> orders = orderRepository.findById(orderId)
-            .stream()
-            .toList(); // Convert Optional to List
+    @Transactional
+    public List<OrderResponse> getOrderSummaryById(Long orderId) {
+        List<Order> orders = orderRepository.findById(orderId)
+                .stream()
+                .toList(); // Convert Optional to List
 
-    List<OrderResponse> orderResponses = new ArrayList<>();
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    for (Order order : orders) {
-        OrderResponse orderResponse = new OrderResponse();
-        orderResponse.setId(order.getId());
-        orderResponse.setCustomOrderId(order.getCustomOrderId());
-        orderResponse.setStatus(order.getStatus());
-        orderResponse.setPaymentStatus(order.getPaymentStatus());
-        orderResponse.setTotal(order.getTotal());
+        for (Order order : orders) {
+            OrderResponse orderResponse = new OrderResponse();
+            orderResponse.setId(order.getId());
+            orderResponse.setCustomOrderId(order.getCustomOrderId());
+            orderResponse.setStatus(order.getStatus());
+            orderResponse.setPaymentStatus(order.getPaymentStatus());
+            orderResponse.setTotal(order.getTotal());
 
-        // ✅ Include Table Information
-        Tables table = order.getTable();
-        if (table != null) {
-            orderResponse.setTableId(table.getId());
-            orderResponse.setTableName(table.getName());
-            orderResponse.setTableType(table.getType());
-            orderResponse.setTableLocation(table.getLocation());
+            if (order.getCreatedAt() != null) {
+                orderResponse.setCreatedAt(order.getCreatedAt().format(formatter));
+            }
+
+            OurUsers user = order.getUser();
+            if (user != null) {
+                orderResponse.setUserName(user.getUsername());
+            }
+            Tables table = order.getTable();
+            if (table != null) {
+                orderResponse.setTableId(table.getId());
+                orderResponse.setTableName(table.getName());
+                orderResponse.setTableType(table.getType());
+                orderResponse.setTableLocation(table.getLocation());
+            }
+
+            List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
+            for (OrderItem orderItem : order.getOrderItems()) {
+                Food food = orderItem.getFood();
+                OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
+                orderItemResponse.setFoodId(food.getId());
+                orderItemResponse.setFoodName(food.getName());
+                orderItemResponse.setFoodDescription(food.getDescription());
+                orderItemResponse.setQuantity(orderItem.getQuantity());
+                orderItemResponse.setPrice(orderItem.getPrice());
+                orderItemResponse.setTotalPrice(food.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+
+                orderItemResponses.add(orderItemResponse);
+            }
+            orderResponse.setOrderItems(orderItemResponses);
+
+            orderResponses.add(orderResponse);
         }
 
-        // ✅ Include Order Items
-        List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
-        for (OrderItem orderItem : order.getOrderItems()) {
-            Food food = orderItem.getFood();
-            OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
-            orderItemResponse.setFoodId(food.getId());
-            orderItemResponse.setFoodName(food.getName());
-            orderItemResponse.setFoodDescription(food.getDescription());
-            orderItemResponse.setQuantity(orderItem.getQuantity());
-            orderItemResponse.setPrice(orderItem.getPrice());
-            orderItemResponse.setTotalPrice(food.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
-
-            orderItemResponses.add(orderItemResponse);
-        }
-        orderResponse.setOrderItems(orderItemResponses); // ✅ Add order items to response
-
-        orderResponses.add(orderResponse);
+        return orderResponses;
     }
 
-    return orderResponses; // ✅ Return order list with items
+    @Override
+@Transactional
+public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests) {
+    if (updatedItemRequests == null || updatedItemRequests.isEmpty()) {
+        throw new IllegalArgumentException("❌ Order must contain at least one valid item.");
+    }
+
+    // Fetch the order
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("❌ Order not found."));
+
+    // Prevent editing completed or cancelled orders
+    if ("COMPLETED".equalsIgnoreCase(order.getStatus()) || "CANCELLED".equalsIgnoreCase(order.getStatus())) {
+        throw new RuntimeException("❌ Cannot edit a completed or cancelled order.");
+    }
+
+    // ✅ Step 1: Identify Existing Items
+    Map<Long, OrderItem> existingItems = order.getOrderItems()
+            .stream()
+            .collect(Collectors.toMap(item -> item.getFood().getId(), item -> item));
+
+    List<OrderItem> updatedOrderItems = new ArrayList<>();
+    BigDecimal total = BigDecimal.ZERO;
+
+    // ✅ Step 2: Update or Add New Items
+    for (OrderItemRequest itemRequest : updatedItemRequests) {
+        Food food = foodRepository.findById(itemRequest.getFoodId())
+                .orElseThrow(() -> new RuntimeException("❌ Food item not found."));
+
+        OrderItem orderItem;
+
+        if (existingItems.containsKey(food.getId())) {
+            // ✅ Update existing item quantity & price
+            orderItem = existingItems.get(food.getId());
+            orderItem.setQuantity(itemRequest.getQuantity());
+            orderItem.setPrice(food.getPrice());
+        } else {
+            // ✅ Add new item
+            orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setFood(food);
+            orderItem.setQuantity(itemRequest.getQuantity());
+            orderItem.setPrice(food.getPrice());
+        }
+
+        // ✅ Recalculate total
+        BigDecimal itemTotal = food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+        total = total.add(itemTotal);
+        updatedOrderItems.add(orderItem);
+    }
+
+    // ✅ Step 3: Remove Items That Are No Longer in the Order
+    List<OrderItem> itemsToRemove = order.getOrderItems()
+            .stream()
+            .filter(item -> !updatedItemRequests.stream()
+                    .map(OrderItemRequest::getFoodId)
+                    .collect(Collectors.toSet())
+                    .contains(item.getFood().getId()))
+            .collect(Collectors.toList());
+
+    // ✅ Instead of replacing the list, remove items one by one
+    itemsToRemove.forEach(orderItemRepository::delete);
+    order.getOrderItems().removeAll(itemsToRemove);
+
+    // ✅ Step 4: Add Updated Items
+    order.getOrderItems().clear();  // Prevent Hibernate tracking issues
+    order.getOrderItems().addAll(updatedOrderItems);
+    orderItemRepository.saveAll(updatedOrderItems);
+
+    // ✅ Step 5: Update Order Total
+    order.setTotal(total);
+
+    return orderRepository.save(order);
 }
 
-
-    // @Override
-    // @Transactional
-    // public List<OrderResponse> getAllOrders() {
-    // List<Order> orders = orderRepository.findAll();
-
-    // List<OrderResponse> orderResponses = new ArrayList<>();
-    // for (Order order : orders) {
-    // OrderResponse orderResponse = new OrderResponse();
-    // orderResponse.setId(order.getId());
-    // orderResponse.setCustomOrderId(order.getCustomOrderId());
-    // orderResponse.setStatus(order.getStatus());
-    // orderResponse.setPaymentStatus(order.getPaymentStatus());
-    // orderResponse.setTotal(order.getTotal());
-
-    // List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
-    // for (OrderItem orderItem : order.getOrderItems()) {
-    // OrderResponse.OrderItemResponse orderItemResponse = new
-    // OrderResponse.OrderItemResponse();
-    // orderItemResponse.setFoodId(orderItem.getFood().getId());
-    // orderItemResponse.setFoodName(orderItem.getFood().getName());
-    // orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
-    // orderItemResponse.setQuantity(orderItem.getQuantity());
-    // orderItemResponse.setPrice(orderItem.getPrice());
-    // orderItemResponse.setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
-
-    // orderItemResponses.add(orderItemResponse);
-    // }
-    // orderResponse.setOrderItems(orderItemResponses);
-    // orderResponses.add(orderResponse);
-    // }
-    // return orderResponses;
-    // }
+    
 
 }

@@ -16,6 +16,9 @@ public class OrderResponse {
     private String tableName;
     private String tableType;
     private String tableLocation;
+    private String createdAt; 
+
+    private String userName;
     private List<OrderItemResponse> orderItems;
 
     @Data

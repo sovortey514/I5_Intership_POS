@@ -30,11 +30,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    // @PostMapping("/create")
-    // public Order createOrder(@RequestBody OrderRequest request) {
-    // return orderService.createOrder(request.getUserId(), request.getTableId(),
-    // request.getItems());
-    // }
     @PostMapping("/placeordercontroller")
     public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
         // Call the service to create the order
@@ -119,19 +114,73 @@ public class OrderController {
     }
 
     @GetMapping("/getordersummary/{orderId}")
-public ResponseEntity<List<OrderResponse>> getOrderSummaryById(@PathVariable Long orderId) {
-    try {
-        List<OrderResponse> orders = orderService.getOrderSummaryById(orderId);
-        if (orders.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<List<OrderResponse>> getOrderSummaryById(@PathVariable Long orderId) {
+        try {
+            List<OrderResponse> orders = orderService.getOrderSummaryById(orderId);
+            if (orders.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-        return ResponseEntity.ok(orders);
+    }
+
+    // @PutMapping("/{orderId}/edit")
+    // public ResponseEntity<Order> editOrder(
+    // @PathVariable Long orderId,
+    // @RequestBody List<OrderItemRequest> updatedItems) {
+
+    // try {
+    // Order updatedOrder = orderService.editOrder(orderId, updatedItems);
+    // return ResponseEntity.ok(updatedOrder);
+    // } catch (RuntimeException e) {
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    // }
+    // }
+
+    @PutMapping("/{orderId}/edit")
+public ResponseEntity<?> editOrder(
+        @PathVariable Long orderId,
+        @RequestBody List<OrderItemRequest> updatedItems) {
+
+    try {
+        Order updatedOrder = orderService.editOrder(orderId, updatedItems);
+
+        // Convert to OrderResponse
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setId(updatedOrder.getId());
+        orderResponse.setCustomOrderId(updatedOrder.getCustomOrderId());
+        orderResponse.setTotal(updatedOrder.getTotal());
+        orderResponse.setStatus(updatedOrder.getStatus());
+        orderResponse.setPaymentStatus(updatedOrder.getPaymentStatus());
+
+        // Convert Order Items to OrderItemResponse
+        List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
+        for (OrderItem orderItem : updatedOrder.getOrderItems()) {
+            OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
+            orderItemResponse.setFoodId(orderItem.getFood().getId());
+            orderItemResponse.setFoodName(orderItem.getFood().getName());
+            orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
+            orderItemResponse.setQuantity(orderItem.getQuantity());
+            orderItemResponse.setPrice(orderItem.getPrice());
+            orderItemResponse.setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+
+            orderItemResponses.add(orderItemResponse);
+        }
+        orderResponse.setOrderItems(orderItemResponses);
+
+        return ResponseEntity.ok(orderResponse);
+
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("❌ Invalid request: " + e.getMessage());
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("❌ Error: " + e.getMessage());
     } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("❌ An unexpected error occurred. Please try again.");
     }
 }
 
-
-    
 
 }
