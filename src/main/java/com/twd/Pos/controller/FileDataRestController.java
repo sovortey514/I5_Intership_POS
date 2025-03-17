@@ -21,6 +21,8 @@ public class FileDataRestController {
     @Autowired
     private FileDataService fileDataService;
 
+    private final String UPLOAD_DIRECTORY = "src/Uploads";
+
     @PostMapping("/upload_food_image")
     public ResponseEntity<?> uploadImageToFoodDirectory(
             @RequestParam("file") MultipartFile file,
@@ -102,4 +104,5 @@ public class FileDataRestController {
                     .body("Error updating file: " + e.getMessage());
         }
     }
+    
 }

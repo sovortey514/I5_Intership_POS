@@ -30,5 +30,6 @@ public class OrderResponse {
         private int quantity;
         private BigDecimal price;
         private BigDecimal totalPrice;
+    
     }
 }
