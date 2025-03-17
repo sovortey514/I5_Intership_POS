@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.twd.Pos.dto.OrderEditRequest;
 import com.twd.Pos.dto.OrderItemRequest;
 import com.twd.Pos.dto.OrderRequest;
 import com.twd.Pos.dto.OrderResponse;
 import com.twd.Pos.entity.Order;
 import com.twd.Pos.entity.OrderItem;
+import com.twd.Pos.entity.Tables;
 import com.twd.Pos.service.OrderService;
 
 @RestController
@@ -127,25 +129,64 @@ public class OrderController {
     }
 
     // @PutMapping("/{orderId}/edit")
-    // public ResponseEntity<Order> editOrder(
-    // @PathVariable Long orderId,
-    // @RequestBody List<OrderItemRequest> updatedItems) {
+    // public ResponseEntity<?> editOrder(
+    //         @PathVariable Long orderId,
+    //         @RequestBody OrderEditRequest orderEditRequest) {
 
-    // try {
-    // Order updatedOrder = orderService.editOrder(orderId, updatedItems);
-    // return ResponseEntity.ok(updatedOrder);
-    // } catch (RuntimeException e) {
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    // }
+    //     try {
+    //         Order updatedOrder = orderService.editOrder(orderId, orderEditRequest.getTableId(),
+    //                 orderEditRequest.getItems());
+
+    //         // Convert to OrderResponse
+    //         OrderResponse orderResponse = new OrderResponse();
+    //         orderResponse.setId(updatedOrder.getId());
+    //         orderResponse.setCustomOrderId(updatedOrder.getCustomOrderId());
+    //         orderResponse.setTotal(updatedOrder.getTotal());
+    //         orderResponse.setStatus(updatedOrder.getStatus());
+    //         orderResponse.setPaymentStatus(updatedOrder.getPaymentStatus());
+
+    //         Tables table = updatedOrder.getTable();
+    //         if (table != null) {
+    //             orderResponse.setTableId(table.getId());
+    //             orderResponse.setTableName(table.getName());
+    //             orderResponse.setTableType(table.getType());
+    //             orderResponse.setTableLocation(table.getLocation());
+    //         }
+
+    //         // Convert Order Items to OrderItemResponse
+    //         List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
+    //         for (OrderItem orderItem : updatedOrder.getOrderItems()) {
+    //             OrderResponse.OrderItemResponse orderItemResponse = new OrderResponse.OrderItemResponse();
+    //             orderItemResponse.setFoodId(orderItem.getFood().getId());
+    //             orderItemResponse.setFoodName(orderItem.getFood().getName());
+    //             orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
+    //             orderItemResponse.setQuantity(orderItem.getQuantity());
+    //             orderItemResponse.setPrice(orderItem.getPrice());
+    //             orderItemResponse
+    //                     .setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+    //             orderItemResponses.add(orderItemResponse);
+    //         }
+    //         orderResponse.setOrderItems(orderItemResponses);
+    //         return ResponseEntity.ok(orderResponse);
+
+    //     } catch (IllegalArgumentException e) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("❌ Invalid request: " + e.getMessage());
+    //     } catch (RuntimeException e) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("❌ Error: " + e.getMessage());
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    //                 .body("❌ An unexpected error occurred. Please try again.");
+    //     }
     // }
 
     @PutMapping("/{orderId}/edit")
 public ResponseEntity<?> editOrder(
         @PathVariable Long orderId,
-        @RequestBody List<OrderItemRequest> updatedItems) {
+        @RequestBody OrderEditRequest orderEditRequest) {
 
     try {
-        Order updatedOrder = orderService.editOrder(orderId, updatedItems);
+        Order updatedOrder = orderService.editOrder(orderId, orderEditRequest.getTableId(),
+                orderEditRequest.getItems());
 
         // Convert to OrderResponse
         OrderResponse orderResponse = new OrderResponse();
@@ -154,6 +195,14 @@ public ResponseEntity<?> editOrder(
         orderResponse.setTotal(updatedOrder.getTotal());
         orderResponse.setStatus(updatedOrder.getStatus());
         orderResponse.setPaymentStatus(updatedOrder.getPaymentStatus());
+
+        Tables table = updatedOrder.getTable();
+        if (table != null) {
+            orderResponse.setTableId(table.getId());
+            orderResponse.setTableName(table.getName());
+            orderResponse.setTableType(table.getType());
+            orderResponse.setTableLocation(table.getLocation());
+        }
 
         // Convert Order Items to OrderItemResponse
         List<OrderResponse.OrderItemResponse> orderItemResponses = new ArrayList<>();
@@ -164,12 +213,11 @@ public ResponseEntity<?> editOrder(
             orderItemResponse.setFoodDescription(orderItem.getFood().getDescription());
             orderItemResponse.setQuantity(orderItem.getQuantity());
             orderItemResponse.setPrice(orderItem.getPrice());
-            orderItemResponse.setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
-
+            orderItemResponse
+                    .setTotalPrice(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
             orderItemResponses.add(orderItemResponse);
         }
         orderResponse.setOrderItems(orderItemResponses);
-
         return ResponseEntity.ok(orderResponse);
 
     } catch (IllegalArgumentException e) {

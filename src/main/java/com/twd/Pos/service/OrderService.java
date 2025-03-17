@@ -16,5 +16,5 @@ public interface OrderService {
     Order removeItemsFromOrder(Long orderId, List<Long> itemIds);
     List<OrderResponse> getAllOrdersAsList();
     List<OrderResponse> getOrderSummaryById(Long orderId);
-    Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests);
+    Order editOrder(Long orderId, Long newTableId, List<OrderItemRequest> updatedItemRequests);
 }

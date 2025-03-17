@@ -372,9 +372,104 @@ public class OrderServiceImpl implements OrderService {
         return orderResponses;
     }
 
+    // @Override
+    // @Transactional
+    // public Order editOrder(Long orderId, Long newTableId, List<OrderItemRequest> updatedItemRequests) {
+    //     if (updatedItemRequests == null || updatedItemRequests.isEmpty()) {
+    //         throw new IllegalArgumentException("❌ Order must contain at least one valid item.");
+    //     }
+
+    //     // Fetch the order
+    //     Order order = orderRepository.findById(orderId)
+    //             .orElseThrow(() -> new RuntimeException("❌ Order not found."));
+
+    //     // Prevent editing completed or cancelled orders
+    //     if ("COMPLETED".equalsIgnoreCase(order.getStatus()) || "CANCELLED".equalsIgnoreCase(order.getStatus())) {
+    //         throw new RuntimeException("❌ Cannot edit a completed or cancelled order.");
+    //     }
+
+    //     // ✅ Update Table If Changed
+    //     if (!order.getTable().getId().equals(newTableId)) {
+    //         // ✅ Release previous table
+    //         Tables oldTable = order.getTable();
+    //         oldTable.setStatus("AVAILABLE");
+    //         tableRepository.save(oldTable);
+
+    //         // ✅ Assign new table
+    //         Tables newTable = tableRepository.findById(newTableId)
+    //                 .orElseThrow(() -> new RuntimeException("❌ Table not found."));
+    //         if (!"AVAILABLE".equalsIgnoreCase(newTable.getStatus())) {
+    //             throw new RuntimeException("❌ Table is not available.");
+    //         }
+
+    //         newTable.setStatus("OCCUPIED");
+    //         tableRepository.save(newTable);
+    //         order.setTable(newTable);
+    //     }
+
+    //     // ✅ Identify Existing Items
+    //     Map<Long, OrderItem> existingItems = order.getOrderItems()
+    //             .stream()
+    //             .collect(Collectors.toMap(item -> item.getFood().getId(), item -> item));
+
+    //     List<OrderItem> updatedOrderItems = new ArrayList<>();
+    //     BigDecimal total = BigDecimal.ZERO;
+
+    //     // ✅ Update or Add New Items
+    //     for (OrderItemRequest itemRequest : updatedItemRequests) {
+    //         Food food = foodRepository.findById(itemRequest.getFoodId())
+    //                 .orElseThrow(() -> new RuntimeException("❌ Food item not found."));
+
+    //         OrderItem orderItem;
+
+    //         if (existingItems.containsKey(food.getId())) {
+    //             // ✅ Update existing item quantity & price
+    //             orderItem = existingItems.get(food.getId());
+    //             orderItem.setQuantity(itemRequest.getQuantity());
+    //             orderItem.setPrice(food.getPrice());
+    //         } else {
+    //             // ✅ Add new item
+    //             orderItem = new OrderItem();
+    //             orderItem.setOrder(order);
+    //             orderItem.setFood(food);
+    //             orderItem.setQuantity(itemRequest.getQuantity());
+    //             orderItem.setPrice(food.getPrice());
+    //             order.getOrderItems().add(orderItem); 
+    //         }
+
+    //         // ✅ Recalculate total
+    //         BigDecimal itemTotal = food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+    //         total = total.add(itemTotal);
+    //         updatedOrderItems.add(orderItem);
+    //     }
+
+    //     // ✅ Remove Items That Are No Longer in the Order
+    //     List<OrderItem> itemsToRemove = order.getOrderItems()
+    //             .stream()
+    //             .filter(item -> !updatedItemRequests.stream()
+    //                     .map(OrderItemRequest::getFoodId)
+    //                     .collect(Collectors.toSet())
+    //                     .contains(item.getFood().getId()))
+    //             .collect(Collectors.toList());
+
+    //     if (!itemsToRemove.isEmpty()) {
+    //         orderItemRepository.deleteAll(itemsToRemove);
+    //     }
+
+    //     // ✅ Instead of replacing, update items properly
+    //     order.getOrderItems().clear();
+    //     order.getOrderItems().addAll(updatedOrderItems);
+    //     orderItemRepository.saveAll(updatedOrderItems);
+
+    //     // ✅ Update Order Total
+    //     order.setTotal(total);
+
+    //     return orderRepository.save(order);
+    // }
+
     @Override
 @Transactional
-public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests) {
+public Order editOrder(Long orderId, Long newTableId, List<OrderItemRequest> updatedItemRequests) {
     if (updatedItemRequests == null || updatedItemRequests.isEmpty()) {
         throw new IllegalArgumentException("❌ Order must contain at least one valid item.");
     }
@@ -388,7 +483,26 @@ public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests)
         throw new RuntimeException("❌ Cannot edit a completed or cancelled order.");
     }
 
-    // ✅ Step 1: Identify Existing Items
+    // ✅ Update Table If Changed
+    if (!order.getTable().getId().equals(newTableId)) {
+        // ✅ Release previous table
+        Tables oldTable = order.getTable();
+        oldTable.setStatus("AVAILABLE");
+        tableRepository.save(oldTable);
+
+        // ✅ Assign new table
+        Tables newTable = tableRepository.findById(newTableId)
+                .orElseThrow(() -> new RuntimeException("❌ Table not found."));
+        if (!"AVAILABLE".equalsIgnoreCase(newTable.getStatus())) {
+            throw new RuntimeException("❌ Table is not available.");
+        }
+
+        newTable.setStatus("OCCUPIED");
+        tableRepository.save(newTable);
+        order.setTable(newTable);
+    }
+
+    // ✅ Identify Existing Items
     Map<Long, OrderItem> existingItems = order.getOrderItems()
             .stream()
             .collect(Collectors.toMap(item -> item.getFood().getId(), item -> item));
@@ -396,7 +510,7 @@ public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests)
     List<OrderItem> updatedOrderItems = new ArrayList<>();
     BigDecimal total = BigDecimal.ZERO;
 
-    // ✅ Step 2: Update or Add New Items
+    // ✅ Update or Add New Items
     for (OrderItemRequest itemRequest : updatedItemRequests) {
         Food food = foodRepository.findById(itemRequest.getFoodId())
                 .orElseThrow(() -> new RuntimeException("❌ Food item not found."));
@@ -409,12 +523,14 @@ public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests)
             orderItem.setQuantity(itemRequest.getQuantity());
             orderItem.setPrice(food.getPrice());
         } else {
-            // ✅ Add new item
+            // ✅ Add new item (fixed)
             orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setFood(food);
             orderItem.setQuantity(itemRequest.getQuantity());
             orderItem.setPrice(food.getPrice());
+
+            orderItem = orderItemRepository.save(orderItem); // ✅ Ensure new item is saved
         }
 
         // ✅ Recalculate total
@@ -423,7 +539,7 @@ public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests)
         updatedOrderItems.add(orderItem);
     }
 
-    // ✅ Step 3: Remove Items That Are No Longer in the Order
+    // ✅ Remove Items That Are No Longer in the Order
     List<OrderItem> itemsToRemove = order.getOrderItems()
             .stream()
             .filter(item -> !updatedItemRequests.stream()
@@ -432,21 +548,20 @@ public Order editOrder(Long orderId, List<OrderItemRequest> updatedItemRequests)
                     .contains(item.getFood().getId()))
             .collect(Collectors.toList());
 
-    // ✅ Instead of replacing the list, remove items one by one
-    itemsToRemove.forEach(orderItemRepository::delete);
-    order.getOrderItems().removeAll(itemsToRemove);
+    if (!itemsToRemove.isEmpty()) {
+        orderItemRepository.deleteAll(itemsToRemove);
+    }
 
-    // ✅ Step 4: Add Updated Items
-    order.getOrderItems().clear();  // Prevent Hibernate tracking issues
+    // ✅ Instead of clearing, merge updates properly
+    order.getOrderItems().clear();
     order.getOrderItems().addAll(updatedOrderItems);
     orderItemRepository.saveAll(updatedOrderItems);
 
-    // ✅ Step 5: Update Order Total
+    // ✅ Update Order Total
     order.setTotal(total);
 
     return orderRepository.save(order);
 }
 
-    
 
 }
