@@ -69,14 +69,26 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // @PrePersist
+    // protected void onCreate() {
+    //     createdAt = LocalDateTime.now();
+    //     updatedAt = LocalDateTime.now();
+    //     status = "PENDING";
+    //     paymentStatus = "UNPAID";
+    //     customOrderId = generateCustomOrderId();
+    // }
+
+
     @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-        status = "PENDING";
-        paymentStatus = "UNPAID";
-        customOrderId = generateCustomOrderId();
+protected void onCreate() {
+    if (createdAt == null) {
+        createdAt = LocalDateTime.now();  // Force the value if it's still null
     }
+    updatedAt = LocalDateTime.now();
+    status = "PENDING";
+    paymentStatus = "UNPAID";
+    customOrderId = generateCustomOrderId();
+}
 
     @PreUpdate
     protected void onUpdate() {

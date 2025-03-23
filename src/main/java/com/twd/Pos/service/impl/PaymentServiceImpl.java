@@ -31,15 +31,22 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment processPayment(Long orderId, BigDecimal amountPaid, String paymentMethod) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
-
+    
         if (order.getPaymentStatus().equalsIgnoreCase("PAID")) {
             throw new RuntimeException("Order is already paid.");
         }
-
-        if (amountPaid.compareTo(order.getTotal()) != 0) {
-            throw new RuntimeException("Incorrect payment amount. Please pay the exact amount.");
+    
+        BigDecimal totalAmount = order.getTotal();
+        
+        if (amountPaid.compareTo(totalAmount) < 0) {
+            throw new RuntimeException("Insufficient payment. Please pay the full amount.");
         }
-
+    
+        BigDecimal cashBack = BigDecimal.ZERO;
+        if (amountPaid.compareTo(totalAmount) > 0) {
+            cashBack = amountPaid.subtract(totalAmount);
+        }
+    
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setAmountPaid(amountPaid);
@@ -47,13 +54,14 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus("PAID");
         payment.setSuccessful(true);
         payment.setPaymentDate(LocalDateTime.now());
-
+        payment.setCashBack(cashBack); 
+    
         order.setPaymentStatus("PAID");
         orderRepository.save(order);
-
+    
         return paymentRepository.save(payment);
     }
-
+    
     @Override
     @Transactional
     public Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod,
@@ -78,11 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaymentMethod(paymentMethod); 
         payment.setStatus("PAID");
         payment.setPaymentDate(LocalDateTime.now()); 
-
-
         order.setPaymentStatus("PAID");
-
-    
         payment = paymentRepository.save(payment); 
         orderRepository.save(order); 
 
