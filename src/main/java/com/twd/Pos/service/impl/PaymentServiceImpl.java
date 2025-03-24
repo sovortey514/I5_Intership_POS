@@ -1,5 +1,6 @@
 package com.twd.Pos.service.impl;
 
+import com.twd.Pos.dto.PaymentOrderDTO;
 import com.twd.Pos.entity.Membership;
 import com.twd.Pos.entity.Order;
 import com.twd.Pos.entity.Payment;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -91,6 +93,11 @@ public class PaymentServiceImpl implements PaymentService {
         orderRepository.save(order); 
 
         return payment; 
+    }
+
+    @Override
+    public List<PaymentOrderDTO> getAllPaymentsWithOrderDetails() {
+        return paymentRepository.findPaymentsWithOrderDetails(); // Fetch payments with their order details
     }
 
 }

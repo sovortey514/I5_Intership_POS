@@ -12,6 +12,7 @@ public class OrderResponse {
     private BigDecimal total;
     private String status;
     private String paymentStatus;
+    private String paymentMethod;
     private Long tableId;
     private String tableName;
     private String tableType;
@@ -20,6 +21,10 @@ public class OrderResponse {
     private String userName;
     private List<OrderItemResponse> orderItems;
 
+    // private String paymentMethod;
+    private BigDecimal paymentAmount;
+    // private String paymentStatus;
+    private String paymentDate;
     @Data
     public static class OrderItemResponse {
         private Long foodId;
@@ -30,4 +35,5 @@ public class OrderResponse {
         private BigDecimal totalPrice;
     
     }
+
 }

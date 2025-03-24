@@ -2,6 +2,7 @@ package com.twd.Pos.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,11 @@ import com.twd.Pos.dto.OrderRequest;
 import com.twd.Pos.dto.OrderResponse;
 import com.twd.Pos.entity.FileData;
 import com.twd.Pos.entity.Food;
+import com.twd.Pos.entity.Membership;
 import com.twd.Pos.entity.Order;
 import com.twd.Pos.entity.OrderItem;
 import com.twd.Pos.entity.OurUsers;
+import com.twd.Pos.entity.Payment;
 import com.twd.Pos.entity.Tables;
 import com.twd.Pos.repository.FileDataRepository;
 import com.twd.Pos.repository.FoodRepository;
@@ -30,6 +33,8 @@ import com.twd.Pos.repository.OrderRepository;
 import com.twd.Pos.repository.OurUserRepo;
 import com.twd.Pos.repository.TableRepository;
 import com.twd.Pos.service.OrderService;
+
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -142,6 +147,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus("PENDING");
         order.setPaymentStatus("UNPAID");
         order.setTotal(BigDecimal.ZERO);
+        order.setCreatedAt(LocalDateTime.now());
 
         order = orderRepository.saveAndFlush(order);
 
@@ -280,8 +286,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public List<OrderResponse> getAllOrdersAsList() {
-        List<Order> orders = orderRepository.findAll(); // Retrieve all orders from the repository
-
+        // List<Order> orders = orderRepository.findAll(); // Retrieve all orders from
+        // the repository
+        List<Order> orders = orderRepository.findAllOrdersWithPayment("PAID");
         List<OrderResponse> orderResponses = new ArrayList<>();
 
         for (Order order : orders) {
@@ -291,8 +298,19 @@ public class OrderServiceImpl implements OrderService {
             orderResponse.setStatus(order.getStatus());
             orderResponse.setPaymentStatus(order.getPaymentStatus());
             orderResponse.setTotal(order.getTotal());
-            
-       
+            // orderResponse.setCreatedAt(order.getCreatedAt());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedCreatedAt = order.getCreatedAt().format(formatter);
+            orderResponse.setCreatedAt(formattedCreatedAt);
+
+            if (order.getPayment() != null) {
+                Payment payment = order.getPayment();
+                orderResponse.setPaymentMethod(payment.getPaymentMethod());
+                orderResponse.setPaymentAmount(payment.getAmountPaid());
+                orderResponse.setPaymentStatus(payment.getStatus());
+                orderResponse.setPaymentDate(payment.getPaymentDate().toString());
+            }
+
             Tables table = order.getTable();
             if (table != null) {
                 orderResponse.setTableId(table.getId());

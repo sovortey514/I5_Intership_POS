@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -64,23 +66,15 @@ public class Order {
     private String paymentStatus = "UNPAID";
 
     @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // @PrePersist
-    // protected void onCreate() {
-    //     createdAt = LocalDateTime.now();
-    //     updatedAt = LocalDateTime.now();
-    //     status = "PENDING";
-    //     paymentStatus = "UNPAID";
-    //     customOrderId = generateCustomOrderId();
-    // }
-
 
     @PrePersist
-protected void onCreate() {
+    protected void onCreate() {
     if (createdAt == null) {
         createdAt = LocalDateTime.now();  // Force the value if it's still null
     }

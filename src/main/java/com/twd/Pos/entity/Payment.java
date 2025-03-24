@@ -16,7 +16,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false)
     @JsonIgnore
     private Order order;
@@ -37,4 +37,8 @@ public class Payment {
 
     @Column(nullable = false)
     private String status;
+    
+    @ManyToOne
+    @JoinColumn(name = "membership_id")
+    private Membership membership;
 }
