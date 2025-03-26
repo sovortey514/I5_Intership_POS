@@ -33,4 +33,11 @@ public class PaymentController {
         List<PaymentOrderDTO> paymentDTOs = paymentService.getAllPaymentsWithOrderDetails();
         return ResponseEntity.ok(paymentDTOs);
     }
+
+    @GetMapping("/payment/{paymentId}")
+    public ResponseEntity<PaymentOrderDTO> getPaymentById(@PathVariable Long paymentId) {
+       
+        PaymentOrderDTO paymentOrderDTO = paymentService.getPaymentById(paymentId);
+        return ResponseEntity.ok(paymentOrderDTO);
+    }
 }

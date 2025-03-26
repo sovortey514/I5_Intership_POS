@@ -14,6 +14,9 @@ public class PaymentOrderDTO {
     private String orderId;
     private BigDecimal orderTotal; 
     private Long membershipId;
+    private BigDecimal cashBack; 
+    private String orderStatus; 
+    private Long tableId;
 
 
     public PaymentOrderDTO(Long paymentId, String paymentMethod, BigDecimal amountPaid, LocalDateTime paymentDate, String orderId, BigDecimal orderTotal,Long membershipId) {

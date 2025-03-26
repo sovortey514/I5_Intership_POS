@@ -12,4 +12,6 @@ public interface PaymentService {
     Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod, String membershipId);
 
     List<PaymentOrderDTO> getAllPaymentsWithOrderDetails();
+
+    PaymentOrderDTO getPaymentById(Long paymentId);
 }
