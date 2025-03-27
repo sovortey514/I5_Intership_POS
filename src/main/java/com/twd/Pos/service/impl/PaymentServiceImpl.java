@@ -97,39 +97,38 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentOrderDTO> getAllPaymentsWithOrderDetails() {
-        return paymentRepository.findPaymentsWithOrderDetails(); // Fetch payments with their order details
+        return paymentRepository.findPaymentsWithOrderDetails(); 
     }
 
     @Override
     @Transactional
     public PaymentOrderDTO getPaymentById(Long paymentId) {
-        // Fetch payment by ID
+
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
-        // Fetch associated order
+
         Order order = payment.getOrder();
 
         Long tableId = null;
         if (order.getTable() != null) {
-            tableId = order.getTable().getId();  // Get tableId from the Table entity
+            tableId = order.getTable().getId();  
         }
 
-        // Create and populate PaymentOrderDTO with the necessary data
         PaymentOrderDTO paymentOrderDTO = new PaymentOrderDTO(
             payment.getId(),
             payment.getPaymentMethod(),
             payment.getAmountPaid(),
             payment.getPaymentDate(),
-            order.getCustomOrderId(),  // Assuming CustomOrderId is the ID you need
-            order.getTotal(),  // Total amount of the order
-            payment.getMembership() != null ? payment.getMembership().getId() : null  // If applicable, Membership ID
+            order.getCustomOrderId(),
+            order.getTotal(), 
+            payment.getMembership() != null ? payment.getMembership().getId() : null  
         );
 
-        // Add additional fields like cashback, order status, and tableId
+    
         paymentOrderDTO.setCashBack(payment.getCashBack());
-        paymentOrderDTO.setOrderStatus(order.getPaymentStatus());  // Order status (PAID, PENDING, etc.)
-        paymentOrderDTO.setTableId(tableId);  // Assuming the table ID is part of the order
+        paymentOrderDTO.setOrderStatus(order.getPaymentStatus()); 
+        paymentOrderDTO.setTableId(tableId);  
 
         return paymentOrderDTO;
     }
