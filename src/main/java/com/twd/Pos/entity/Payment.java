@@ -26,6 +26,7 @@ public class Payment {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal cashBack = BigDecimal.ZERO;
+    
     @Column(nullable = false)
     private String paymentMethod; // "CASH", "CARD"
 
