@@ -14,4 +14,5 @@ public interface PaymentService {
     List<PaymentOrderDTO> getAllPaymentsWithOrderDetails();
 
     PaymentOrderDTO getPaymentById(Long paymentId);
+
 }

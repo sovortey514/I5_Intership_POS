@@ -15,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -73,86 +76,47 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.save(payment);
     }
 
-    // @Override
-    // @Transactional
-    // public Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod,
-    //         String membershipId) {
-
-    //     Order order = orderRepository.findById(orderId)
-    //             .orElseThrow(() -> new RuntimeException("Order not found"));
-
-    //     Membership membership = membershipRepository.findByMembershipId(membershipId)
-    //             .orElseThrow(() -> new RuntimeException("Membership card not found"));
-
-    //     if (membership.getBalance() < amountPaid.doubleValue()) {
-    //         throw new RuntimeException("Insufficient balance on membership card");
-    //     }
-
-    //     membership.setBalance(membership.getBalance() - amountPaid.doubleValue());
-    //     membershipRepository.save(membership);
-
-    //     Payment payment = new Payment();
-    //     payment.setOrder(order);
-    //     payment.setAmountPaid(amountPaid);
-    //     payment.setPaymentMethod(paymentMethod);
-    //     payment.setStatus("PAID");
-    //     payment.setPaymentDate(LocalDateTime.now());
-    //     order.setPaymentStatus("PAID");
-    //     payment = paymentRepository.save(payment);
-    //     orderRepository.save(order);
-
-    //     return payment;
-    // }
     @Override
     @Transactional
-    public Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod,
-            String membershipId) {
-    
-        // Retrieve the order and membership details
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-    
-        Membership membership = membershipRepository.findByMembershipId(membershipId)
-                .orElseThrow(() -> new RuntimeException("Membership card not found"));
-    
-        // Show the current balance of the membership
-        System.out.println("Current membership balance: " + membership.getBalance());
-    
-        // Check if the membership balance is sufficient
-        if (membership.getBalance() < amountPaid.doubleValue()) {
-            throw new RuntimeException("Insufficient balance on membership card");
-        }
-    
-        // Calculate tax (5% of the amountPaid)
-        BigDecimal taxAmount = amountPaid.multiply(BigDecimal.valueOf(0.05));
-        BigDecimal totalAmount = amountPaid.add(taxAmount); // Total amount including tax
-    
-        // Update the membership balance
-        membership.setBalance(membership.getBalance() - totalAmount.doubleValue());
-    
-        // Show the new balance after payment processing
-        System.out.println("Updated membership balance after payment: " + membership.getBalance());
-    
-        membershipRepository.save(membership);
-    
-        // Create the payment object with the updated amount
-        Payment payment = new Payment();
-        payment.setOrder(order);
-        payment.setAmountPaid(totalAmount); 
-        payment.setPaymentMethod(paymentMethod);
-        payment.setStatus("PAID");
-        payment.setPaymentDate(LocalDateTime.now());
-        order.setPaymentStatus("PAID");
-        membership.setBalance(0);
-    
-        // Save the payment and order
-        payment = paymentRepository.save(payment);
-        orderRepository.save(order);
-    
-        return payment;
-    }
-    
+    public Payment processPaymentWithMembership(Long orderId, BigDecimal
+    amountPaid, String paymentMethod,
+    String membershipId) {
 
+    Order order = orderRepository.findById(orderId)
+    .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    Membership membership = membershipRepository.findByMembershipId(membershipId)
+    .orElseThrow(() -> new RuntimeException("Membership card not found"));
+
+    System.out.println("Current membership balance: " + membership.getBalance());
+
+    if (membership.getBalance() < amountPaid.doubleValue()) {
+    throw new RuntimeException("Insufficient balance on membership card");
+    }
+
+    BigDecimal taxAmount = amountPaid.multiply(BigDecimal.valueOf(0.05));
+    BigDecimal totalAmount = amountPaid.add(taxAmount);
+
+    membership.setBalance(membership.getBalance() - totalAmount.doubleValue());
+
+    System.out.println("Updated membership balance after payment: " +
+    membership.getBalance());
+
+    membershipRepository.save(membership);
+    Payment payment = new Payment();
+    payment.setOrder(order);
+    payment.setAmountPaid(totalAmount);
+    payment.setPaymentMethod(paymentMethod);
+    payment.setStatus("PAID");
+    payment.setPaymentDate(LocalDateTime.now());
+    order.setPaymentStatus("PAID");
+
+    payment = paymentRepository.save(payment);
+    orderRepository.save(order);
+    return payment;
+    }
+
+   
 
     @Override
     public List<PaymentOrderDTO> getAllPaymentsWithOrderDetails() {
@@ -180,12 +144,12 @@ public class PaymentServiceImpl implements PaymentService {
     payment.getPaymentDate(),
     order.getCustomOrderId(),
     order.getTotal(),
-    payment.getMembership() != null ? payment.getMembership().getId() : null
-    );
+    payment.getMembership() != null ? payment.getMembership().getId() : null);
 
     paymentOrderDTO.setCashBack(payment.getCashBack());
     paymentOrderDTO.setOrderStatus(order.getPaymentStatus());
     paymentOrderDTO.setTableId(tableId);
+    
 
     return paymentOrderDTO;
     }

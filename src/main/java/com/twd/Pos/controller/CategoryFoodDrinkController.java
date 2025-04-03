@@ -53,22 +53,6 @@ public class CategoryFoodDrinkController {
     categoryFoodDrinkService.deleteCategoryFood_Drink(id);
     return "Category with ID " + id + " deleted successfully.";
     }
-
-    // @DeleteMapping("/deleteCagoryFoodDrink/{id}")
-    // public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-    //     try {
-    //         categoryFoodDrinkService.deleteCategoryFood_Drink(id); // Perform the deletion
-    //         return ResponseEntity.status(HttpStatus.NO_CONTENT) // 204 No Content - successful deletion
-    //                 .body("Category with ID " + id + " deleted successfully.");
-    //     } catch (RuntimeException e) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND) // 404 Not Found if category not found
-    //                 .body("Category with ID " + id + " not found.");
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 500 Internal Server Error
-    //                 .body("Error deleting category: " + e.getMessage());
-    //     }
-    // }
-
     @PostMapping("/CreateCategoryFoodDrink/{id}/subcategories")
     public CategoryFood_Drink addSubCategoriesToCategory(
             @PathVariable Long id,

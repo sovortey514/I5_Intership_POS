@@ -40,4 +40,11 @@ public class PaymentController {
         PaymentOrderDTO paymentOrderDTO = paymentService.getPaymentById(paymentId);
         return ResponseEntity.ok(paymentOrderDTO);
     }
+
+    // @GetMapping("/withmembershipandcash")
+    // public ResponseEntity<List<PaymentOrderDTO>> getPaymentsWithMembership() {
+    //     List<PaymentOrderDTO> payments = paymentService.getPaymentsWithMembership();
+    //     return ResponseEntity.ok(payments);
+    // }
+
 }

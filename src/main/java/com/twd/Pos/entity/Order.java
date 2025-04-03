@@ -62,6 +62,10 @@ public class Order {
     @Column(nullable = false)
     private String status; // "PENDING", "COMPLETED", "CANCELLED"
 
+    @ManyToOne
+    @JoinColumn(name = "membership_id", nullable = true)
+    private Membership membership;
+
     @Column(nullable = false)
     private String paymentStatus = "UNPAID";
 
