@@ -2,9 +2,6 @@ package com.twd.Pos.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-import com.twd.Pos.entity.Membership;
-
 import lombok.Data;
 
 @Data
@@ -19,6 +16,7 @@ public class PaymentOrderDTO {
     private BigDecimal cashBack; 
     private String orderStatus; 
     private Long tableId;
+    private MembershipDTO membershipDetails;
    
     public PaymentOrderDTO(Long paymentId, String paymentMethod, BigDecimal amountPaid, LocalDateTime paymentDate, String orderId, BigDecimal orderTotal,Long membershipId) {
         this.paymentId = paymentId;

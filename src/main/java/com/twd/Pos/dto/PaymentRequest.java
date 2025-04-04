@@ -10,4 +10,5 @@ public class PaymentRequest {
     private BigDecimal amountPaid;
     private String paymentMethod;
     private String membershipId;
+    private String currency;
 }

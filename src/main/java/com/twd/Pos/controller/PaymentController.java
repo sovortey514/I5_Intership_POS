@@ -20,7 +20,7 @@ public class PaymentController {
 
     @PostMapping("/process")
     public Payment processPayment(@RequestBody PaymentRequest request) {
-        return paymentService.processPayment(request.getOrderId(), request.getAmountPaid(), request.getPaymentMethod());
+        return paymentService.processPayment(request.getOrderId(), request.getAmountPaid(), request.getPaymentMethod(), request.getCurrency());
     }
 
     @PostMapping("/processWithMembership")

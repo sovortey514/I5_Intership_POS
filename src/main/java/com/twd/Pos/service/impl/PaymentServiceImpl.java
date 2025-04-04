@@ -14,11 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -34,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     @Override
-    public Payment processPayment(Long orderId, BigDecimal amountPaid, String paymentMethod) {
+    public Payment processPayment(Long orderId, BigDecimal amountPaid, String paymentMethod, String currency) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
@@ -47,28 +46,45 @@ public class PaymentServiceImpl implements PaymentService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal taxAmount = totalAmount.multiply(new BigDecimal("0.05"));
-
         BigDecimal totalAmountWithTax = totalAmount.add(taxAmount);
 
         System.out.println("Total amount (including tax): " + totalAmountWithTax);
 
-        if (amountPaid.compareTo(totalAmountWithTax) < 0) {
+        if ("KHR".equalsIgnoreCase(currency)) {
+            totalAmountWithTax = totalAmountWithTax.multiply(new BigDecimal("4100")); 
+            System.out.println("Total amount (including tax) in KHR: " + totalAmountWithTax);
+        }
+
+        BigDecimal finalAmount = totalAmountWithTax;
+
+        if ("KHR".equalsIgnoreCase(currency)) {
+            amountPaid = amountPaid;
+            finalAmount = totalAmountWithTax; 
+        } else {
+            
+            
+            if ("USD".equalsIgnoreCase(currency) || "USDT".equalsIgnoreCase(currency)) {
+                
+                finalAmount = finalAmount;
+            }
+        }
+
+        if (amountPaid.compareTo(finalAmount) < 0) {
             throw new RuntimeException("Insufficient payment. Please pay the full amount.");
         }
 
-        BigDecimal cashBack = BigDecimal.ZERO;
-        if (amountPaid.compareTo(totalAmountWithTax) > 0) {
-            cashBack = amountPaid.subtract(totalAmountWithTax);
-        }
+        BigDecimal cashBack = amountPaid.subtract(finalAmount); 
+
+        System.out.println("cashBack in " + currency + ": " + cashBack);
 
         Payment payment = new Payment();
         payment.setOrder(order);
-        payment.setAmountPaid(amountPaid);
+        payment.setAmountPaid(amountPaid); 
         payment.setPaymentMethod(paymentMethod);
         payment.setStatus("PAID");
         payment.setSuccessful(true);
         payment.setPaymentDate(LocalDateTime.now());
-        payment.setCashBack(cashBack);
+        payment.setCashBack(cashBack); 
 
         order.setPaymentStatus("PAID");
         orderRepository.save(order);
@@ -78,45 +94,42 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Payment processPaymentWithMembership(Long orderId, BigDecimal
-    amountPaid, String paymentMethod,
-    String membershipId) {
+    public Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod,
+            String membershipId) {
 
-    Order order = orderRepository.findById(orderId)
-    .orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
 
-    Membership membership = membershipRepository.findByMembershipId(membershipId)
-    .orElseThrow(() -> new RuntimeException("Membership card not found"));
+        Membership membership = membershipRepository.findByMembershipId(membershipId)
+                .orElseThrow(() -> new RuntimeException("Membership card not found"));
 
-    System.out.println("Current membership balance: " + membership.getBalance());
+        System.out.println("Current membership balance: " + membership.getBalance());
 
-    if (membership.getBalance() < amountPaid.doubleValue()) {
-    throw new RuntimeException("Insufficient balance on membership card");
+        if (membership.getBalance() < amountPaid.doubleValue()) {
+            throw new RuntimeException("Insufficient balance on membership card");
+        }
+
+        BigDecimal taxAmount = amountPaid.multiply(BigDecimal.valueOf(0.05));
+        BigDecimal totalAmount = amountPaid.add(taxAmount);
+
+        membership.setBalance(membership.getBalance() - totalAmount.doubleValue());
+
+        System.out.println("Updated membership balance after payment: " +
+                membership.getBalance());
+
+        membershipRepository.save(membership);
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setAmountPaid(totalAmount);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setStatus("PAID");
+        payment.setPaymentDate(LocalDateTime.now());
+        order.setPaymentStatus("PAID");
+
+        payment = paymentRepository.save(payment);
+        orderRepository.save(order);
+        return payment;
     }
-
-    BigDecimal taxAmount = amountPaid.multiply(BigDecimal.valueOf(0.05));
-    BigDecimal totalAmount = amountPaid.add(taxAmount);
-
-    membership.setBalance(membership.getBalance() - totalAmount.doubleValue());
-
-    System.out.println("Updated membership balance after payment: " +
-    membership.getBalance());
-
-    membershipRepository.save(membership);
-    Payment payment = new Payment();
-    payment.setOrder(order);
-    payment.setAmountPaid(totalAmount);
-    payment.setPaymentMethod(paymentMethod);
-    payment.setStatus("PAID");
-    payment.setPaymentDate(LocalDateTime.now());
-    order.setPaymentStatus("PAID");
-
-    payment = paymentRepository.save(payment);
-    orderRepository.save(order);
-    return payment;
-    }
-
-   
 
     @Override
     public List<PaymentOrderDTO> getAllPaymentsWithOrderDetails() {
@@ -127,33 +140,30 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentOrderDTO getPaymentById(Long paymentId) {
 
-    Payment payment = paymentRepository.findById(paymentId)
-    .orElseThrow(() -> new RuntimeException("Payment not found"));
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
 
-    Order order = payment.getOrder();
+        Order order = payment.getOrder();
 
-    Long tableId = null;
-    if (order.getTable() != null) {
-    tableId = order.getTable().getId();
+        Long tableId = null;
+        if (order.getTable() != null) {
+            tableId = order.getTable().getId();
+        }
+
+        PaymentOrderDTO paymentOrderDTO = new PaymentOrderDTO(
+                payment.getId(),
+                payment.getPaymentMethod(),
+                payment.getAmountPaid(),
+                payment.getPaymentDate(),
+                order.getCustomOrderId(),
+                order.getTotal(),
+                payment.getMembership() != null ? payment.getMembership().getId() : null);
+
+        paymentOrderDTO.setCashBack(payment.getCashBack());
+        paymentOrderDTO.setOrderStatus(order.getPaymentStatus());
+        paymentOrderDTO.setTableId(tableId);
+
+        return paymentOrderDTO;
     }
-
-    PaymentOrderDTO paymentOrderDTO = new PaymentOrderDTO(
-    payment.getId(),
-    payment.getPaymentMethod(),
-    payment.getAmountPaid(),
-    payment.getPaymentDate(),
-    order.getCustomOrderId(),
-    order.getTotal(),
-    payment.getMembership() != null ? payment.getMembership().getId() : null);
-
-    paymentOrderDTO.setCashBack(payment.getCashBack());
-    paymentOrderDTO.setOrderStatus(order.getPaymentStatus());
-    paymentOrderDTO.setTableId(tableId);
-    
-
-    return paymentOrderDTO;
-    }
-
-    
 
 }
