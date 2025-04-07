@@ -75,13 +75,7 @@ public class FixedAssetDetailServiceImpl implements FixedAssetDetailService {
         // TODO Auto-generated method stub
     }
 
-    // @Override
-    // public List<FixedAssetDetail> getAllFixedAssetDetails() {
-    //     List<FixedAssetDetail> details = fixedAssetDetailRepository.findAll();
-    //     // Log the retrieved data
-    //     System.out.println("Retrieved FixedAssetDetails: " + details);
-    //     return details;
-    // }
+    
     @Override
     public List<FixedAssetDetail> getAllFixedAssetDetails() {
         return fixedAssetDetailRepository.findAll();
