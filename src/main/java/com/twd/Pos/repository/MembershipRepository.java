@@ -11,7 +11,7 @@ import com.twd.Pos.entity.Membership;
 public interface MembershipRepository extends JpaRepository <Membership, Long>{
 
 
-    Optional<Membership> findByMembershipId(String membershipId);
+    // Optional<Membership> findByMembershipId();
 
     
 }

@@ -24,8 +24,8 @@ public class PaymentController {
     }
 
     @PostMapping("/processWithMembership")
-    public Payment processPaymentWithMembership(@RequestBody PaymentRequest request) {
-        return paymentService.processPaymentWithMembership(request.getOrderId(), request.getAmountPaid(), request.getPaymentMethod(), request.getMembershipId());
+    public PaymentOrderDTO processPaymentWithMembership(@RequestBody PaymentRequest request) {
+        return paymentService.processPaymentWithMembershipDTO(request.getOrderId(), request.getAmountPaid(), request.getPaymentMethod(), request.getMembershipId());
     }
 
     @GetMapping("/payments")

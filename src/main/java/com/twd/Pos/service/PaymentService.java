@@ -9,7 +9,9 @@ import com.twd.Pos.entity.Payment;
 public interface PaymentService {
     Payment processPayment(Long orderId, BigDecimal amountPaid, String paymentMethod,String currency);
 
-    Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod, String membershipId);
+    // Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod, Long membershipId);
+
+    PaymentOrderDTO processPaymentWithMembershipDTO(Long orderId, BigDecimal amountPaid, String paymentMethod, Long membershipId);
 
     List<PaymentOrderDTO> getAllPaymentsWithOrderDetails();
 

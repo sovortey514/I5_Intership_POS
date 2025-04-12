@@ -9,6 +9,6 @@ public class PaymentRequest {
     private Long orderId;
     private BigDecimal amountPaid;
     private String paymentMethod;
-    private String membershipId;
+    private Long membershipId;
     private String currency;
 }

@@ -28,7 +28,7 @@ public class Payment {
     private BigDecimal cashBack = BigDecimal.ZERO;
     
     @Column(nullable = false)
-    private String paymentMethod; // "CASH", "CARD"
+    private String paymentMethod; 
 
     @Column(nullable = false)
     private boolean isSuccessful;

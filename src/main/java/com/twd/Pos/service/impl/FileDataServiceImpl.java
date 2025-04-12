@@ -49,10 +49,9 @@ public class FileDataServiceImpl implements FileDataService {
         String originalFilename = file.getOriginalFilename();
         String filePath = FOOD_IMAGE_PATH + originalFilename;
 
-        // Check if a file with the same name already exists
         int counter = 1;
         while (fileDataRepository.existsByFilePath(filePath)) {
-            // Generate a new file name
+
             String extension = "";
             String nameWithoutExt = originalFilename;
 
@@ -62,12 +61,10 @@ public class FileDataServiceImpl implements FileDataService {
                 extension = originalFilename.substring(lastIndex);
             }
 
-            // Append a counter to the filename
             filePath = FOOD_IMAGE_PATH + nameWithoutExt + "_" + counter + extension;
             counter++;
         }
 
-        // Debugging log
         System.out.println("Saving file: " + filePath + " for Food ID: " + food.getId());
 
         FileData fileData = new FileData();
@@ -79,7 +76,6 @@ public class FileDataServiceImpl implements FileDataService {
         FileData savedFile = fileDataRepository.save(fileData);
         file.transferTo(new File(filePath));
 
-        // Debugging log to check database save
         System.out.println("Saved file with ID: " + savedFile.getId() + ", Food ID: " + savedFile.getFood().getId());
 
         return "File uploaded successfully: " + savedFile.getName();
@@ -125,8 +121,7 @@ public class FileDataServiceImpl implements FileDataService {
         List<Food> foods = foodRepository.findAll();
 
         return foods.stream().map(food -> {
-            // System.out.println("Fetching files for Food ID: " + food.getId());
-
+   
             List<FileDataDTO> files = fileDataRepository.findByFoodId(food.getId()) // ✅ Fetch images
                     .stream()
                     .map(FileDataDTO::new)
