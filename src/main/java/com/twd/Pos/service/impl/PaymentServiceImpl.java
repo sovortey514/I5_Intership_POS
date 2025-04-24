@@ -92,50 +92,15 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.save(payment);
     }
 
-    // @Override
-    // @Transactional
-    // public Payment processPaymentWithMembership(Long orderId, BigDecimal amountPaid, String paymentMethod,
-    //         Long membershipId) {
 
-    //     Order order = orderRepository.findById(orderId)
-    //             .orElseThrow(() -> new RuntimeException("Order not found"));
-
-    //     Membership membership = membershipRepository.findById(membershipId)
-    //             .orElseThrow(() -> new RuntimeException("Membership card not found"));
-
-    //     System.out.print("Current membership balance: " + membership.getBalance() + ", Membership ID: " + membership.getId());
-
-    //     if (membership.getBalance() < amountPaid.doubleValue()) {
-    //         throw new RuntimeException("Insufficient balance on membership card");
-    //     }
-
-    //     BigDecimal taxAmount = amountPaid.multiply(BigDecimal.valueOf(0.05));
-    //     BigDecimal totalAmount = amountPaid.add(taxAmount);
-
-    //     membership.setBalance(membership.getBalance() - totalAmount.doubleValue());
-
-    //     System.out.println("Updated membership balance after payment: " +
-    //             membership.getBalance());
-
-    //     membershipRepository.save(membership);
-    //     Payment payment = new Payment();
-    //     payment.setOrder(order);
-    //     payment.setAmountPaid(totalAmount);
-    //     payment.setPaymentMethod(paymentMethod);
-    //     payment.setStatus("PAID");
-    //     payment.setPaymentDate(LocalDateTime.now());
-    //     order.setPaymentStatus("PAID");
-
-    //     payment = paymentRepository.save(payment);
-    //     orderRepository.save(order);
-    //     return payment;
-    // }
 
     @Override
     public List<PaymentOrderDTO> getAllPaymentsWithOrderDetails() {
         return paymentRepository.findPaymentsWithOrderDetails();
     }
 
+    @Transactional
+    @Override
     public PaymentOrderDTO getPaymentById(Long paymentId) {
         // Fetch the payment by ID
         Payment payment = paymentRepository.findById(paymentId)
@@ -159,7 +124,8 @@ public class PaymentServiceImpl implements PaymentService {
                 membership != null ? membership.getMembershipType() : null,
                 membership != null ? membership.getName() : null,
                 membership != null ? membership.getGender() : null,
-                membership != null ? membership.getBalance() : null
+                membership != null ? membership.getBalance() : null,
+                payment.getCashBack()
         );
     }
 
@@ -219,7 +185,8 @@ public class PaymentServiceImpl implements PaymentService {
                 membership.getMembershipType(),
                 membership.getName(),
                 membership.getGender(),
-                membership.getBalance()
+                membership.getBalance(),
+                payment.getCashBack()
         );
     }
     

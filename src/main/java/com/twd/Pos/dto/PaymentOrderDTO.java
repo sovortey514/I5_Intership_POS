@@ -25,7 +25,7 @@ public class PaymentOrderDTO {
     // Constructor to include all fields, including membership details
     public PaymentOrderDTO(Long paymentId, String paymentMethod, BigDecimal amountPaid, LocalDateTime paymentDate, 
                            String orderId, BigDecimal orderTotal, Long membershipId, 
-                           String membershipType, String membershipName, String gender, Double balance) {
+                           String membershipType, String membershipName, String gender, Double balance, BigDecimal cashBack) {
         this.paymentId = paymentId;
         this.paymentMethod = paymentMethod;
         this.amountPaid = amountPaid;
@@ -37,6 +37,8 @@ public class PaymentOrderDTO {
         this.membershipName = membershipName;
         this.gender = gender;
         this.balance = balance;
+        this.cashBack = cashBack;
+
     }
 
 }
