@@ -286,8 +286,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public List<OrderResponse> getAllOrdersAsList() {
-        // List<Order> orders = orderRepository.findAll(); // Retrieve all orders from
-        // the repository
         List<Order> orders = orderRepository.findAllOrdersWithPayment("PAID");
         List<OrderResponse> orderResponses = new ArrayList<>();
 
@@ -298,7 +296,6 @@ public class OrderServiceImpl implements OrderService {
             orderResponse.setStatus(order.getStatus());
             orderResponse.setPaymentStatus(order.getPaymentStatus());
             orderResponse.setTotal(order.getTotal());
-            // orderResponse.setCreatedAt(order.getCreatedAt());
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String formattedCreatedAt = order.getCreatedAt().format(formatter);
             orderResponse.setCreatedAt(formattedCreatedAt);
@@ -411,9 +408,8 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("❌ Cannot edit a completed or cancelled order.");
         }
 
-        // ✅ Update Table If Changed
         if (!order.getTable().getId().equals(newTableId)) {
-            // ✅ Release previous table
+           
             Tables oldTable = order.getTable();
             oldTable.setStatus("AVAILABLE");
             tableRepository.save(oldTable);
