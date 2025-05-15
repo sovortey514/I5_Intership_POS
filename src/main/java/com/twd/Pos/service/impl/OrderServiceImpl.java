@@ -484,6 +484,7 @@ public class OrderServiceImpl implements OrderService {
         orderItemRepository.saveAll(updatedOrderItems);
 
         // ✅ Update Order Total
+        // order.setTotal(total);
         order.setTotal(total);
 
         return orderRepository.save(order);

@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class OrderItemResponse {
      private Long foodId;
-    private String foodName;        // Add food name
-    private String foodDescription; // Add food description
+    private String foodName;     
+    private String foodDescription;
     private int quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;

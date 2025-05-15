@@ -23,6 +23,7 @@ import com.twd.Pos.dto.OrderResponse;
 import com.twd.Pos.entity.Order;
 import com.twd.Pos.entity.OrderItem;
 import com.twd.Pos.entity.Tables;
+import com.twd.Pos.repository.OrderRepository;
 import com.twd.Pos.service.OrderService;
 
 @RestController
@@ -31,6 +32,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+       @Autowired
+    private OrderRepository orderRepository;
+
 
     @PostMapping("/placeordercontroller")
     public OrderResponse createOrder(@RequestBody OrderRequest orderRequest) {
@@ -61,7 +65,8 @@ public class OrderController {
         }
         orderResponse.setOrderItems(orderItemResponses);
 
-        return orderResponse; // Send the response with food details
+        return orderResponse;
+
     }
 
     @PutMapping("/complete/{orderId}")
