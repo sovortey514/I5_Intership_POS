@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order createOrder(Long userId, Long tableId, List<OrderItemRequest> itemRequests) {
         if (itemRequests == null || itemRequests.isEmpty()) {
-            throw new IllegalArgumentException("❌ Order must contain at least one valid item.");
+            throw new IllegalArgumentException("Order must contain at least one valid item.");
         }
 
         OurUsers user = ourUserRepo.findById(userId)
@@ -154,7 +154,7 @@ public class OrderServiceImpl implements OrderService {
         order.setCustomOrderId(generateCustomOrderId(order.getId()));
         order = orderRepository.save(order);
 
-        System.out.println("✅ Order ID after save: " + order.getId());
+        System.out.println("Order ID after save: " + order.getId());
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;

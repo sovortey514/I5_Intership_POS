@@ -20,7 +20,7 @@ import com.twd.Pos.entity.Tables;
 import com.twd.Pos.service.TableService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class TableController {
 
     @Autowired

@@ -23,7 +23,7 @@ public class FileDataDTO {
         this.id = fileData.getId();
         this.fileName = fileData.getName();
         this.fileType = fileData.getType();
-        this.fileUrl = "http://localhost:6060/admin/get_image/" + fileData.getName();
+        this.fileUrl = "http://localhost:6060/auth/get_image/" + fileData.getName();
     }
 
     // Getters and Setters

@@ -41,7 +41,7 @@ public class Food {
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_food_Drink_id", nullable = false)
     @JsonIgnore
     private CategoryFood_Drink categoryFood_Drink;
 

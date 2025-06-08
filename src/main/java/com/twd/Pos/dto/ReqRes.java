@@ -2,7 +2,7 @@ package com.twd.Pos.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.twd.Pos.entity.Category;
-import com.twd.Pos.entity.Department;
+// import com.twd.Pos.entity.Department;
 import com.twd.Pos.entity.FixedAssetCounts;
 import com.twd.Pos.entity.FixedAssetDetail;
 import com.twd.Pos.entity.Material;
@@ -40,8 +40,8 @@ public class ReqRes {
     // private Building building;
     // private List<Building> buildings; 
    
-    private Department department;
-    private List<Department> departments;
+    // private Department department;
+    // private List<Department> departments;
 
     // private AssetHolder assetHolder;
     // private List<AssetHolder> assetHolders;

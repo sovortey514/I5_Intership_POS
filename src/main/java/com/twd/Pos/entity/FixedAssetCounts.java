@@ -28,10 +28,6 @@ public class FixedAssetCounts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;  // Assuming you have a Department entity
-
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

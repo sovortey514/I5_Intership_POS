@@ -15,7 +15,7 @@ import com.twd.Pos.dto.FoodFileResponseDTO;
 import com.twd.Pos.service.FileDataService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class FileDataRestController {
 
     @Autowired

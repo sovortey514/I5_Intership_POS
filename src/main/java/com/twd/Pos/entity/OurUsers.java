@@ -46,6 +46,12 @@ public class OurUsers implements UserDetails {
         return name;
     }
 
+    // @Column(nullable = false, length = 500)
+    // private String accessToken;
+
+    // @Column(nullable = false, length = 500)
+    // private String refreshToken;
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

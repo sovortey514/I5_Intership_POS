@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.twd.Pos.entity.Category;
-import com.twd.Pos.entity.Department;
+// import com.twd.Pos.entity.Department;
 import com.twd.Pos.entity.FixedAssetCounts;
 import com.twd.Pos.entity.FixedAssetDetail;
 import com.twd.Pos.entity.Material;
-import com.twd.Pos.repository.DepartmentRepository;
+// import com.twd.Pos.repository.DepartmentRepository;
 import com.twd.Pos.repository.FixedAssetCountsRepository;
 import com.twd.Pos.repository.FixedAssetDetailRepository;
 import com.twd.Pos.repository.FixedAssetRepository;
@@ -28,8 +28,8 @@ public class FixedAssetCountServiceImpl implements FixedAssetCountService {
     @Autowired
     private FixedAssetDetailRepository fixedAssetDetailRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+    // @Autowired
+    // private DepartmentRepository departmentRepository;
 
     @Autowired
     private FixedAssetRepository fixedAssetRepository;
@@ -40,9 +40,9 @@ public class FixedAssetCountServiceImpl implements FixedAssetCountService {
     @Override
     public FixedAssetCounts createFixedAssetCounts(FixedAssetCounts fixedAssetCounts) {
 
-        if (fixedAssetCounts.getDepartment() == null || !departmentRepository.existsById(fixedAssetCounts.getDepartment().getId())) {
-            throw new IllegalArgumentException("Invalid department ID");
-        }
+        // if (fixedAssetCounts.getDepartment() == null || !departmentRepository.existsById(fixedAssetCounts.getDepartment().getId())) {
+        //     throw new IllegalArgumentException("Invalid department ID");
+        // }
         
         if (fixedAssetCounts.getCreatedBy() == null || fixedAssetCounts.getCreatedBy().isEmpty()) {
             throw new IllegalArgumentException("Created By must be provided");

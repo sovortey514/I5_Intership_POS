@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.twd.Pos.dto.ReqRes;
 import com.twd.Pos.entity.OurUsers;
@@ -78,6 +79,7 @@ public class AuthService {
                 response.setStatusCode(500);
             }
         } catch (Exception e) {
+             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             response.setStatusCode(500);
             response.setError("Registration error: " + e.getMessage());
         }

@@ -1,5 +1,6 @@
-package com.twd.Pos.entity;
+// package com.twd.Pos.entity;
 
-public @interface Min {
+// public @interface Min {
 
-}
+// }
+// // 

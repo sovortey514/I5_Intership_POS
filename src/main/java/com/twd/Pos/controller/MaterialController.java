@@ -24,7 +24,7 @@ import com.twd.Pos.repository.FixedAssetRepository;
 import com.twd.Pos.service.MaterialService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class MaterialController {
     
     @Autowired
