@@ -28,6 +28,11 @@ public class PaymentController {
         return paymentService.processPaymentWithMembershipDTO(request.getOrderId(), request.getAmountPaid(), request.getPaymentMethod(), request.getMembershipId());
     }
 
+    @PostMapping("/processwithbakong")
+    public Payment processPaymentwithBakong(@RequestBody PaymentRequest payment) {
+        return paymentService.processPaymentwithbakong(payment.getOrderId(), payment.getAmountPaid(), payment.getPaymentMethod(), payment.getCurrency());
+    }
+
     @GetMapping("/payments")
     public ResponseEntity<List<PaymentOrderDTO>> getPaymentsWithOrderDetails() {
         List<PaymentOrderDTO> paymentDTOs = paymentService.getAllPaymentsWithOrderDetails();

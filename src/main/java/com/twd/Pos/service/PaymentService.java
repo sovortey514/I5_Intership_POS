@@ -17,4 +17,6 @@ public interface PaymentService {
 
     PaymentOrderDTO getPaymentById(Long paymentId);
 
+    Payment processPaymentwithbakong(Long orderId, BigDecimal amountPaid, String paymentMethod, String currency);
+
 }

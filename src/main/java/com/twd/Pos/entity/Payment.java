@@ -2,6 +2,7 @@ package com.twd.Pos.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -42,4 +43,7 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "membership_id")
     private Membership membership;
+
+    @OneToMany(mappedBy = "payment")
+    private List<Bakong> bakongs;
 }
