@@ -169,14 +169,14 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus("PAID");
         payment.setPaymentDate(LocalDateTime.now());
         payment.setMembership(membership); // Link the membership to the payment
-        payment.setCashBack(BigDecimal.ZERO); // Assuming no cashback here
+        payment.setCashBack(BigDecimal.ZERO); 
 
         // Save the payment object
         payment = paymentRepository.save(payment);
         order.setPaymentStatus("PAID");
         orderRepository.save(order);
 
-        // Return the PaymentOrderDTO including payment and membership details
+
         return new PaymentOrderDTO(
                 payment.getId(),
                 payment.getPaymentMethod(),

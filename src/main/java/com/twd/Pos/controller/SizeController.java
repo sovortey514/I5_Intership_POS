@@ -17,7 +17,7 @@ import com.twd.Pos.entity.Size;
 import com.twd.Pos.service.SizeService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class SizeController {
 
     private final SizeService sizeService;

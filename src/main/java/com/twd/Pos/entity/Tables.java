@@ -2,6 +2,7 @@ package com.twd.Pos.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -39,8 +40,8 @@ public class Tables {
     @Column(nullable = false)
     private String location;
 
-     @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //  @JsonIgnore
+    @OneToMany(mappedBy = "table", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // @JsonBackReference
     private List<Order> orders;
 
     @ElementCollection

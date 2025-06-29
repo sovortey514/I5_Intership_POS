@@ -17,7 +17,7 @@ import com.twd.Pos.entity.SubCategoryFood_Drink;
 import com.twd.Pos.service.SubCategoryFoodDrinkService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class SubCategoryFoodDrinkController {
 
     @Autowired

@@ -42,8 +42,10 @@ public class Payment {
     
     @ManyToOne
     @JoinColumn(name = "membership_id")
+    @JsonIgnore
     private Membership membership;
 
     @OneToMany(mappedBy = "payment")
+    @JsonIgnore
     private List<Bakong> bakongs;
 }

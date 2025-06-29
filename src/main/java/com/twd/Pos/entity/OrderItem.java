@@ -18,13 +18,11 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
     @JoinColumn(name = "order_id", nullable = false)
-    @JsonIgnore 
     @JsonBackReference
     private Order order;
     
     @ManyToOne(fetch = FetchType.EAGER) 
     @JoinColumn(name = "food_id", nullable = false)
-    @JsonIgnore
     private Food food;
 
     @Column(nullable = false)

@@ -11,4 +11,5 @@ import com.twd.Pos.entity.Tables;
 public interface TableRepository extends JpaRepository<Tables, Long>{
     List<Tables> findByStatus(String status);
     List<Tables> findByType(String type);
+    
 }

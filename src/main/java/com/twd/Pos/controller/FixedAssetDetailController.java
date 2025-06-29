@@ -18,7 +18,7 @@ import com.twd.Pos.entity.FixedAssetDetail;
 import com.twd.Pos.service.FixedAssetDetailService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class FixedAssetDetailController {
     
     @Autowired

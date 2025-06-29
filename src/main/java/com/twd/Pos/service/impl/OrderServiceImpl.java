@@ -127,17 +127,13 @@ public class OrderServiceImpl implements OrderService {
         if (itemRequests == null || itemRequests.isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one valid item.");
         }
-
         OurUsers user = ourUserRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
         Tables table = tableRepository.findById(tableId)
                 .orElseThrow(() -> new RuntimeException("Table not found"));
-
         if (!"AVAILABLE".equalsIgnoreCase(table.getStatus())) {
             throw new RuntimeException("Table is not available");
         }
-
         table.setStatus("OCCUPIED");
         tableRepository.save(table);
 
@@ -148,13 +144,9 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentStatus("UNPAID");
         order.setTotal(BigDecimal.ZERO);
         order.setCreatedAt(LocalDateTime.now());
-
         order = orderRepository.saveAndFlush(order);
-
         order.setCustomOrderId(generateCustomOrderId(order.getId()));
         order = orderRepository.save(order);
-
-        System.out.println("Order ID after save: " + order.getId());
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -174,9 +166,8 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal itemTotal = food.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
             total = total.add(itemTotal);
             orderItems.add(orderItem);
-
+            
             OrderItemResponse orderItemResponse = new OrderItemResponse();
-
             orderItemResponse.setFoodId(food.getId());
             orderItemResponse.setFoodName(food.getName());
             orderItemResponse.setFoodDescription(food.getDescription());
@@ -409,7 +400,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (!order.getTable().getId().equals(newTableId)) {
-           
+
             Tables oldTable = order.getTable();
             oldTable.setStatus("AVAILABLE");
             tableRepository.save(oldTable);

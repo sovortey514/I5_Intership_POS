@@ -7,6 +7,8 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -47,7 +49,7 @@ public class Order {
     private Tables table;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIgnore
+
     private List<OrderItem> orderItems;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -64,6 +66,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "membership_id", nullable = true)
+    @JsonIgnore
     private Membership membership;
 
     @Column(nullable = false)

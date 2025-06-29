@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class CategoryController {
 
     @Autowired

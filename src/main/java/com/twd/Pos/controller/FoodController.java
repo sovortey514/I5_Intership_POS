@@ -18,7 +18,7 @@ import com.twd.Pos.entity.Food;
 import com.twd.Pos.service.FoodService;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 public class FoodController {
 
     private final FoodService foodService;

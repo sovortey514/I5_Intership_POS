@@ -63,8 +63,6 @@ public ResponseEntity<Tables> mergeTables(@RequestBody Map<String, Long> request
     return ResponseEntity.ok(mergedTable);
 }
 
-
-    
 @PostMapping("/split/{id}")
 public ResponseEntity<String> splitTable(@PathVariable Long id) {
     tableService.splitTables(id);
