@@ -32,6 +32,11 @@ public class SubCategoryFood_Drink {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    
+    @Column(name = "status", nullable = false)
+    private Integer status = 1;
+
+
     @Column(name = "created_at")
     private LocalDateTime create_at;
 

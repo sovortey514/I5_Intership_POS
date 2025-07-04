@@ -79,6 +79,7 @@ public class CategoryFoodDrinkServiceImpl implements CategoryFoodDrinkService {
     @Override
     public CategoryFood_Drink saveCategoryFood_Drink(CategoryFood_Drink category) {
         try {
+            category.setStatus(1);
             return categoryFoodDrinkRepository.save(category);
         } catch (Exception e) {
             throw new RuntimeException("Error saving category: " + e.getMessage(), e);
@@ -102,5 +103,21 @@ public class CategoryFoodDrinkServiceImpl implements CategoryFoodDrinkService {
         } catch (Exception e) {
             throw new RuntimeException("Error updating category: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public CategoryFood_Drink updateCategoryStatus(Long id, Integer status) {
+        try {
+        Optional<CategoryFood_Drink> categoryOpt = categoryFoodDrinkRepository.findById(id);
+        if (categoryOpt.isPresent()) {
+            CategoryFood_Drink category = categoryOpt.get();
+            category.setStatus(0); 
+            return categoryFoodDrinkRepository.save(category);  
+        } else {
+            throw new RuntimeException("Category not found with ID: " + id);
+        }
+    } catch (Exception e) {
+        throw new RuntimeException("Error updating category status: " + e.getMessage(), e);
+    }
     }
 }

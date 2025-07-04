@@ -3,6 +3,7 @@ package com.twd.Pos.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.twd.Pos.entity.CategoryFood_Drink;
 import com.twd.Pos.entity.SubCategoryFood_Drink;
 
 public interface SubCategoryFoodDrinkService {
@@ -14,4 +15,5 @@ public interface SubCategoryFoodDrinkService {
     SubCategoryFood_Drink addSubCategoryToCategory(Long categoryId, SubCategoryFood_Drink subCategory);
     SubCategoryFood_Drink updateSubCategory(Long id, SubCategoryFood_Drink updatedSubCategory);
     void deleteSubCategoryFoodDrink (Long id);
+    SubCategoryFood_Drink updateSubCategoryStatus(Long id, Integer status);
 }

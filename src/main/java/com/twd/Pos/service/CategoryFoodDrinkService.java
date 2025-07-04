@@ -13,4 +13,5 @@ public interface CategoryFoodDrinkService {
     void deleteCategoryFood_Drink(Long id);
     CategoryFood_Drink addSuCategoryFood_Drink(Long categoryId, List<SubCategoryFood_Drink> subCategoryFood_Drinks);
     CategoryFood_Drink updatCategoryFood_Drink(Long id, CategoryFood_Drink upCategoryFood_Drink);
+    CategoryFood_Drink updateCategoryStatus(Long id, Integer status);
 }

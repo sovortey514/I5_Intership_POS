@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.twd.Pos.entity.CategoryFood_Drink;
@@ -58,6 +59,13 @@ public class CategoryFoodDrinkController {
             @PathVariable Long id,
             @RequestBody List<SubCategoryFood_Drink> subCategories) {
         return categoryFoodDrinkService.addSuCategoryFood_Drink(id, subCategories);
+    }
+
+    @PutMapping("/{id}/status")
+    public CategoryFood_Drink updateCategoryStatus(
+        @PathVariable Long id,
+        @RequestParam Integer status) {
+        return categoryFoodDrinkService.updateCategoryStatus(id, status);
     }
 
 }

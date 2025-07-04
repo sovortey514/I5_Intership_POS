@@ -28,6 +28,7 @@ public class SubCategoryFoodDrinkServiceImpl implements SubCategoryFoodDrinkServ
         if(categoryFood_Drinkopt.isPresent()){
             CategoryFood_Drink categoryFood_Drink = categoryFood_Drinkopt.get();
             subCategory.setCategory(categoryFood_Drink);
+            subCategory.setStatus(1);
             return subCategoryFoodDrinkRepository.save(subCategory);
         }else{
             throw new RuntimeException("Category not found with ID: " + categoryId);
@@ -107,5 +108,25 @@ public class SubCategoryFoodDrinkServiceImpl implements SubCategoryFoodDrinkServ
     public List<SubCategoryFood_Drink> getAllSubCategoriesWithCategory() {
         return subCategoryFoodDrinkRepository.findAllWithCategory(); // Use findAllWithCategory() if needed
     }
+
+    @Override
+   public SubCategoryFood_Drink updateSubCategoryStatus(Long id, Integer status) {
+    try {
+        Optional<SubCategoryFood_Drink> subcategoryOpt = subCategoryFoodDrinkRepository.findById(id);
+        if (subcategoryOpt.isPresent()) {
+            SubCategoryFood_Drink subCategoryFood_Drink = subcategoryOpt.get();
+            subCategoryFood_Drink.setStatus(0); 
+            return subCategoryFoodDrinkRepository.save(subCategoryFood_Drink);
+        } else {
+            throw new RuntimeException("SubCategory not found with ID: " + id);
+        }
+    } catch (Exception e) {
+        throw new RuntimeException("Error updating SubCategory status: " + e.getMessage(), e);
+    }
+}
+
+
+
+   
     
 }

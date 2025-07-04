@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.twd.Pos.entity.CategoryFood_Drink;
 import com.twd.Pos.entity.SubCategoryFood_Drink;
 import com.twd.Pos.service.SubCategoryFoodDrinkService;
 
@@ -63,6 +65,13 @@ public class SubCategoryFoodDrinkController {
     @GetMapping("/subcategories")
     public List<SubCategoryFood_Drink> getAllSubCategoriesWithCategory() {
         return subCategoryFoodDrinkService.getAllSubCategoriesWithCategory();
+    }
+
+    @PutMapping("/{id}/subcategorystatus")
+    public SubCategoryFood_Drink updateSubCategoryStatus(
+          @PathVariable Long id,
+        @RequestParam Integer status) {
+        return subCategoryFoodDrinkService.updateSubCategoryStatus(id, status);
     }
 
 }
